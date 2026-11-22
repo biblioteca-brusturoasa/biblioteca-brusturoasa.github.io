@@ -75,6 +75,13 @@ dialog{border:1px solid var(--line);border-radius:11px;padding:0;width:min(720px
  <label class="maintenance-switch" for="maintenance-toggle"><input id="maintenance-toggle" type="checkbox" role="switch" disabled><span id="maintenance-toggle-label">ON – Site vizibil pentru cititori</span></label>
  <label><span>Mesaj pentru vizitatori în timpul mentenanței</span><textarea id="maintenance-message-edit" rows="2" maxlength="500" placeholder="Site-ul este temporar indisponibil pentru actualizări.">Site-ul este temporar indisponibil pentru actualizări. Vă mulțumim pentru înțelegere.</textarea></label>
  <div class="actions"><button type="button" class="btn" id="save-maintenance-message" disabled>Salvează mesajul de mentenanță</button></div><p class="hint" id="maintenance-help">Comutatorul devine activ după conectarea bazei de date și autentificare. Apăsarea lui publică imediat noua stare.</p>
+<div id="github-manual-control" class="notice" hidden>
+<strong>Administrare pe GitHub Pages (fără Supabase).</strong> Butonul ON/OFF este disponibil.
+La schimbarea lui se descarcă <code>site-status.json</code>. Pentru ca modificarea să apară și la cititori,
+încarcă acel fișier în depozitul GitHub și apasă <strong>Commit changes</strong>.
+<a href="https://github.com/biblioteca-brusturoasa/biblioteca-brusturoasa.github.io/upload/main" target="_blank" rel="noopener noreferrer">Deschide încărcarea pe GitHub</a>.
+Doar persoanele cu drepturi în depozit pot publica schimbările. Nu există o comutare online instantanee în acest mod.
+</div>
 </section>
 <section class="cards" aria-label="Situație"><div class="stat"><b id="stat-books">0</b><span>Titluri în catalog</span></div><div class="stat"><b id="stat-news">0</b><span>Noutăți</span></div><div class="stat"><b id="stat-events">0</b><span>Evenimente</span></div><div class="stat"><b id="stat-resources">0</b><span>Resurse electronice</span></div></section>
 <section class="panel" id="records-panel"><div class="panel-heading"><div><h2 id="section-heading">Fondul de carte</h2><p class="hint" id="section-description">Introduceți titlurile din biblioteca reală.</p></div><button type="button" class="btn primary" id="add-record">+ Adaugă</button></div>
@@ -82,7 +89,7 @@ dialog{border:1px solid var(--line);border-radius:11px;padding:0;width:min(720px
 <section class="panel" id="settings-panel" hidden><div class="panel-heading"><h2>Program și prezentare</h2><button type="button" class="btn primary" id="save-settings">Salvează</button></div>
 <div class="box-stack limit"><div><h3>Programul bibliotecii</h3><p class="hint">Bifează „Confirmat” numai după verificarea orarului.</p><label class="check"><input id="program-confirmed" type="checkbox"><span>Orarul este confirmat și poate fi afișat public.</span></label></div><div class="fieldgrid" id="program-fields"></div><label><span>Observații despre program</span><textarea id="program-notes" placeholder="De exemplu: program special în vacanță"></textarea></label><hr><div><h3>Despre bibliotecă</h3><p class="hint">Textele sunt afișate în secțiunea „Despre bibliotecă”.</p><label class="check"><input type="checkbox" id="info-confirmed"><span>Informațiile sunt verificate și pot fi publicate.</span></label></div><div id="info-fields" class="box-stack"></div><hr><div><h3>Recomandarea săptămânii</h3><p class="hint">O carte prezentată special pe pagina catalogului.</p></div><label><span>Titlu</span><input type="text" id="recommendation-title"></label><label><span>Autor</span><input type="text" id="recommendation-author"></label><label><span>Scurtă prezentare</span><textarea id="recommendation-summary"></textarea></label></div></section>
 <section class="panel" id="publish-panel" hidden><div class="panel-heading"><h2>Salvare, copie de siguranță și publicare</h2></div>
-<div class="box-stack"><div class="notice">Modificările se păstrează într-un <b>draft local</b>. Pentru afișarea lor pe site-ul cititorilor, folosește butonul „Publică online acum”. Copiile JSON sunt recomandate pentru siguranță.</div>
+<div class="box-stack"><div class="notice">Modificările se păstrează într-un <b>draft local</b>. În modul GitHub Pages, descarcă biblioteca-data.json și încarcă-l în depozit, cu Commit changes. Dacă Supabase este configurat, publicarea se face direct după autentificare.</div>
 <div><h3>1. Copie de siguranță</h3><p class="hint">Descarcă toate cărțile, anunțurile și setările într-un fișier JSON.</p><div class="actions"><button class="btn primary" type="button" id="export-json">Descarcă datele JSON</button><label class="btn" for="import-json" style="cursor:pointer">Încarcă date dintr-o copie JSON</label><input type="file" id="import-json" accept=".json,application/json" hidden></div></div>
 <hr><div><h3>2. Importul fondului de carte din Excel</h3><p class="hint">În Excel, salvează tabelul ca <b>CSV UTF-8</b>. Coloane acceptate: Titlu, Autor, Domeniu/Gen, Editura, An, ISBN, Exemplare, Cota. Înregistrările noi se adaugă fără a dubla automat cărțile deja existente.</p><div class="actions"><label class="btn" for="import-csv" style="cursor:pointer">Importă catalog CSV</label><input id="import-csv" type="file" accept=".csv,text/csv" hidden></div></div>
 <hr><div><h3>3. Publicare sincronizată</h3>
@@ -104,11 +111,11 @@ dialog{border:1px solid var(--line);border-radius:11px;padding:0;width:min(720px
  <p class="hint">Afișele sunt comprimate automat. Publică numai imagini pentru care biblioteca are drepturi și permisiunea persoanelor fotografiate, dacă este cazul.</p>
  </div><div class="modal-actions"><button type="button" class="btn" id="cancel-dialog">Anulează</button><button type="submit" class="btn primary">Salvează înregistrarea</button></div></form></dialog>
 <div id="message" hidden role="status"></div>
-<script type="application/json" id="initial-data">{"books": [{"title": "Amintiri din copilărie", "author": "Ion Creangă", "genre": "Literatură română"}, {"title": "Povești", "author": "Ion Creangă", "genre": "Lectură pentru copii"}, {"title": "Poezii", "author": "Mihai Eminescu", "genre": "Poezie"}, {"title": "Baltagul", "author": "Mihail Sadoveanu", "genre": "Literatură română"}, {"title": "Dumbrava minunată", "author": "Mihail Sadoveanu", "genre": "Lectură pentru copii"}, {"title": "La Medeleni", "author": "Ionel Teodoreanu", "genre": "Literatură română"}, {"title": "Cireșarii", "author": "Constantin Chiriță", "genre": "Lectură pentru copii"}], "recommendation": {"title": "Amintiri din copilărie", "author": "Ion Creangă"}, "news": [{"title": "Biblioteca pe site-ul Primăriei", "body": "Descoperă informațiile publicate de Primăria Brusturoasa despre biblioteca din comună.", "source": "https://brusturoasa.ro/comunitate/cultura/biblioteca-comunala-pastorel-teodoreanu/"}], "events": [{"id": "demo-bnr-noiembrie", "date": "2026-11-12", "end_date": "2026-11-19", "time": "", "place": "Biblioteca Națională, București", "institution": "Biblioteca Națională a României", "category": "Educație", "title": "„Toamna în Capitală” — concurs de artă pentru copii și tineri", "body": "Concurs de pictură, desen și tehnică mixtă. Organizatorul precizează vârstele și condițiile pentru trimiterea lucrărilor.", "source": "https://bibnat.ro/toamna-in-capitala-concurs-de-pictura/", "featured": true}, {"id": "demo-atelier", "date": "2026-11-20", "end_date": "", "time": "16:00", "place": "Brusturoasa", "institution": "Biblioteca „Păstorel Teodoreanu”", "category": "Lectură", "title": "Model de anunț · Atelier de lectură în familie", "body": "Exemplu pentru previzualizare. Bibliotecarul poate completa durata, vârsta participanților și detaliile atelierului.", "source": "", "featured": true}], "resources": [{"id": "demonstratie-editie", "title": "12 lecții despre Europa", "author": "Pascal Fontaine", "body": "Broșură a Oficiului pentru Publicații al Uniunii Europene. Exemplu de resursă cu original și ediție în limba română.", "date": "2018-04-10", "source": "https://op.europa.eu/en/publication-detail/-/publication/a5ba73c6-3c6a-11e8-b5fe-01aa75ed71a1/", "romanian_source": "https://op.europa.eu/webpub/com/eu-in-12-lessons/ro/"}], "program": {}, "public_info": {}, "video": {}, "live": {}, "logo": "", "rubrics": [{"id": "demo", "title": "Cum aflu dacă o carte este disponibilă?", "body": "Caută titlul în catalog, apoi contactează biblioteca pentru a verifica disponibilitatea unui exemplar. Aceasta este o rubrică de exemplu pentru previzualizare.", "source": "", "link_label": ""}], "gallery": [{"name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.webp", "kind": "photo", "title": "Sediul bibliotecii din Brusturoasa", "description": "Vedere din stradă cu intrarea, treptele și rampa."}]}</script>
+<script type="application/json" id="initial-data">{"_status": "preview", "books": [], "news": [], "events": [], "resources": [], "recommendation": {}, "program": {}, "public_info": {}, "video": {}, "live": {}, "logo": "", "rubrics": [], "gallery": []}</script>
 <script>
 'use strict';
 const $ = id => document.getElementById(id);
-const DRAFT_KEY = 'biblioteca-brusturoasa-draft-v3';
+const DRAFT_KEY = 'biblioteca-brusturoasa-draft-v4';
 const cloud = window.LibraryCloud;
 let publishedRevision = null, unpublishedChanges = false, maintenanceEnabled = false;
 const schemas = {
@@ -215,35 +222,56 @@ function setAuthenticated(enabled){
  $('admin-layout').hidden=cloud.enabled&&!enabled;
  $('login-gate').hidden=!cloud.enabled||enabled;
  $('logout-button').hidden=!cloud.enabled||!enabled;
- $('publish-online').disabled=!cloud.enabled||!enabled;
- $('maintenance-toggle').disabled=!cloud.enabled||!enabled;
- $('save-maintenance-message').disabled=!cloud.enabled||!enabled;
+ $('publish-online').disabled=cloud.enabled&&!enabled;
+ $('publish-online').textContent=cloud.enabled?'Publică online acum':'Descarcă datele pentru GitHub';
+ $('maintenance-toggle').disabled=cloud.enabled&&!enabled;
+ $('save-maintenance-message').disabled=cloud.enabled&&!enabled;
+ $('github-manual-control').hidden=cloud.enabled;
  $('reload-public').disabled=cloud.enabled&&!enabled;
  $('online-status').textContent=!cloud.enabled?
-   'MOD DEMONSTRAȚIE. Completați config.js și creați contul instituțional. Datele rămân numai în browser.' :
+   'MOD GITHUB PAGES: poți crea și descărca fișierul biblioteca-data.json. Publicarea necesită încărcare și Commit changes în GitHub.' :
    enabled?'Conectat la baza de date online. Orice publicare va actualiza site-ul cititorilor.':'Este necesară autentificarea bibliotecarului.';
- $('maintenance-help').textContent=enabled?'Comutarea ON/OFF se publică imediat în baza de date (independent de draftul nepublicat).':'Comutator disponibil doar după conectare și autentificare.';
+ $('maintenance-help').textContent=cloud.enabled
+   ? (enabled?'Comutarea ON/OFF se publică imediat în baza de date.':'Comutator disponibil după autentificare.')
+   : 'Comutatorul pregătește fișierul site-status.json. Încarcă-l pe GitHub și confirmă modificările pentru efect online.';
 }
 async function readPublished(ask=false){
  if(ask&&unpublishedChanges&&!confirm('Reîncarci datele online? Draftul local nepublicat va fi înlocuit. Descarcă întâi o copie JSON, dacă dorești să îl păstrezi.'))return;
  try{
    let content;
    if(cloud.enabled){const result=await cloud.read();content=result.data;publishedRevision=result.revision;}
-   else{const response=await fetch('./biblioteca-data.json',{cache:'no-store'});if(!response.ok)throw Error('Nu există fișier local publicat.');content=await response.json();}
+   else{
+     const [response, statusResponse]=await Promise.all([
+       fetch('./biblioteca-data.json?check='+Date.now(),{cache:'no-store'}),
+       fetch('./site-status.json?check='+Date.now(),{cache:'no-store'})
+     ]);
+     if(!response.ok)throw Error('Nu există biblioteca-data.json pe site.');
+     content=await response.json();
+     if(statusResponse.ok){const settings=await statusResponse.json();content.maintenance=settings.maintenance||{enabled:false};}
+   }
    data=normalizeContent(content);
    unpublishedChanges=false;
    if(ask)try{localStorage.removeItem(DRAFT_KEY);}catch{}
    $('mark-live').checked=data._status==='live';
    updateMaintenancePanel(data.maintenance);
    renderCounters();render();
-   $('draft-status').textContent=cloud.enabled?'✓ Datele publicate au fost încărcate.':'✓ Date de demonstrație; fără publicare online.';
+   $('draft-status').textContent=cloud.enabled?'✓ Datele publicate au fost încărcate.':'✓ Fișierele publicate au fost citite de pe GitHub Pages.';
    $('publish-result').textContent=cloud.enabled?'Versiunea online: '+publishedRevision:'';
    if(ask)notify('Informațiile publicate au fost reîncărcate.');
  }catch(e){$('publish-result').textContent='Nu s-au putut încărca datele: '+e.message;notify('Eroare la citirea conținutului: '+e.message);}
 }
 $('reload-public').onclick=()=>readPublished(true);
 $('publish-online').onclick=async()=>{
- if(!cloud.enabled||!cloud.hasSession)return notify('Autentifică-te mai întâi.');
+ if(!cloud.enabled){
+   const output=structuredClone(data);
+   output._status=$('mark-live').checked?'live':'preview';
+   delete output.maintenance; // ON/OFF se administrează separat din site-status.json.
+   download('biblioteca-data.json',JSON.stringify(output,null,2)+'\n','application/json;charset=utf-8');
+   $('publish-result').textContent='Fișierul a fost descărcat. Încarcă biblioteca-data.json în depozitul GitHub și apasă Commit changes.';
+   notify('Fișier pregătit. Publicarea se finalizează în GitHub.');
+   return;
+ }
+ if(!cloud.hasSession)return notify('Autentifică-te mai întâi.');
  if(publishedRevision===null)return notify('Nu există o versiune online încărcată. Încearcă Reîncarcă datele publicate.');
  const button=$('publish-online');button.disabled=true;$('publish-result').textContent='Pregătesc publicarea…';
  try {
@@ -279,6 +307,15 @@ $('maintenance-toggle').addEventListener('change',async event=>{
  }
  const toggle=$('maintenance-toggle');toggle.disabled=true;
  try{
+   if(!cloud.enabled){
+     const message=$('maintenance-message-edit').value.trim().slice(0,500)||'Site-ul este temporar indisponibil pentru actualizări.';
+     const state={maintenance:{enabled,message,updated_at:new Date().toISOString()},version:1};
+     download('site-status.json',JSON.stringify(state,null,2)+'\n','application/json;charset=utf-8');
+     updateMaintenancePanel(state.maintenance);
+     $('maintenance-help').textContent='Fișierul site-status.json a fost descărcat. IMPORTANT: încarcă-l în GitHub și apasă Commit changes. Până atunci, site-ul public rămâne neschimbat.';
+     notify('Stare pregătită. Acum încarcă site-status.json în GitHub.');
+     return;
+   }
    const live=await cloud.read();
    const message=$('maintenance-message-edit').value.trim().slice(0,500)||'Site-ul este temporar indisponibil pentru actualizări. Vă mulțumim pentru înțelegere.';
    const content={...live.data,maintenance:{enabled,message,updated_at:new Date().toISOString()}};
@@ -293,7 +330,14 @@ $('maintenance-toggle').addEventListener('change',async event=>{
  finally{toggle.disabled=false;}
 });
 $('save-maintenance-message').addEventListener('click',async()=>{
- if(!cloud.enabled||!cloud.hasSession)return notify('Este necesară conectarea bibliotecarului.');
+ if(!cloud.enabled){
+   const message=$('maintenance-message-edit').value.trim().slice(0,500)||'Site-ul este temporar indisponibil pentru actualizări.';
+   const state={maintenance:{enabled:maintenanceEnabled,message,updated_at:new Date().toISOString()},version:1};
+   download('site-status.json',JSON.stringify(state,null,2)+'\n','application/json;charset=utf-8');
+   notify('Încarcă site-status.json în GitHub și apasă Commit changes.');
+   return;
+ }
+ if(!cloud.hasSession)return notify('Este necesară conectarea bibliotecarului.');
  const button=$('save-maintenance-message');button.disabled=true;
  try{
    const live=await cloud.read();

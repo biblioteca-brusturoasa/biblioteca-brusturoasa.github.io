@@ -215,7 +215,7 @@ body.maintenance .maintenance-view{display:block!important}
 </head>
 <body>
 <a class="skip" href="#continut">Sari la conținut</a>
-<p class="preview-note">Site în pregătire · Acces public temporar oprit până la prezentare</p>
+<p class="preview-note">Catalog în curs de completare · Informațiile se actualizează de bibliotecă</p>
 <header class="header">
   <div class="wrap header-inner">
     <a class="brand" href="#acasa" aria-label="Biblioteca Comunală Păstorel Teodoreanu, acasă">
@@ -924,6 +924,15 @@ function visitorStatistics() {
 }
 
 let publicRevision = null;
+let staticStatusSnapshot = null;
+async function readStaticSiteStatus() {
+  const response = await fetch('./site-status.json?check=' + Date.now(), {cache:'no-store'});
+  if (!response.ok) throw Error('Fișierul de stare nu a fost găsit.');
+  const json = await response.json();
+  return json?.maintenance && typeof json.maintenance.enabled === 'boolean'
+    ? json.maintenance
+    : {enabled:false, message:''};
+}
 function applyMaintenance(content) {
   const maintenance = content && content.maintenance && content.maintenance.enabled === true;
   document.body.classList.toggle('maintenance', !!maintenance);
@@ -942,9 +951,16 @@ async function loadPublicData() {
       publicRevision = result.revision;
       data = result.data;
     } else {
-      // Mod sigur de așteptare: niciodată catalog demo când nu există backend.
-      applyMaintenance({maintenance:{enabled:true,message:'Site-ul bibliotecii este în pregătire pentru prezentare. Revenim în curând.'}});
-      return;
+      // Găzduire statică GitHub Pages: pagină deschisă, date reale publicate prin fișiere.
+      // Nu simulăm un backend și nu publicăm catalogul demonstrativ.
+      const [contentResponse, statusResult] = await Promise.all([
+        fetch('./biblioteca-data.json?check=' + Date.now(), {cache:'no-store'}),
+        readStaticSiteStatus().catch(() => ({enabled:false, message:''}))
+      ]);
+      if (!contentResponse.ok) throw Error('Lipsește biblioteca-data.json din depozit.');
+      data = await contentResponse.json();
+      staticStatusSnapshot = JSON.stringify(statusResult);
+      data.maintenance = statusResult;
     }
     if (applyMaintenance(data)) return;
     if (data._status === 'live') {
@@ -963,10 +979,18 @@ async function loadPublicData() {
     renderMedia(data.video, data.live, data.gallery);
     renderRubrics(data);
   } catch (error) {
-    applyMaintenance({maintenance:{enabled:true,message:'Site-ul bibliotecii este temporar indisponibil. Vă rugăm să reveniți mai târziu.'}});
+    // Nu blocăm artificial pagina statică atunci când o resursă lipsește.
+    applyMaintenance({maintenance: {enabled:!!window.LibraryCloud?.enabled,
+      message:'Site-ul bibliotecii este temporar indisponibil. Vă rugăm să reveniți mai târziu.'}});
+    if (!window.LibraryCloud?.enabled) {
+      startCatalog({books:[]});
+      displayArticles('home-news', [], 'mixed');
+      displayArticles('news', [], 'news');
+      displayArticles('resources', [], 'resource');
+    }
     const warning = el('sync-alert');
     warning.textContent = 'Conexiunea la catalog este temporar indisponibilă. Reîncărcați pagina mai târziu.';
-    warning.hidden = true; // mesajul de mentenanță este suficient pentru vizitatori
+    warning.hidden = !!window.LibraryCloud?.enabled;
     for (const id of ['catalog-status','home-news','news','events','resources','schedule','public-info','video-grid','rubrics']) {
       if (el(id)) empty(el(id), 'Informațiile nu se pot încărca acum. Încearcă din nou mai târziu.');
     }
@@ -986,6 +1010,17 @@ if (window.LibraryCloud?.enabled) {
   setInterval(checkForPublishedChanges, 20000);
   window.addEventListener('focus', checkForPublishedChanges);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) checkForPublishedChanges(); });
+} else {
+  // Starea ON/OFF din GitHub este verificată și pe pagina publică.
+  async function refreshStaticSiteStatus() {
+    if (document.hidden || staticStatusSnapshot === null) return;
+    try {
+      const latest = JSON.stringify(await readStaticSiteStatus());
+      if (latest !== staticStatusSnapshot) location.reload();
+    } catch { /* dacă GitHub este temporar indisponibil, păstrăm afișarea curentă */ }
+  }
+  setInterval(refreshStaticSiteStatus, 20000);
+  window.addEventListener('focus', refreshStaticSiteStatus);
 }
 
 loadPublicData();
