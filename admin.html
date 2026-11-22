@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Administrare · Biblioteca Păstorel Teodoreanu</title>
+<style>
+:root { --bg:#f7f5ee; --green:#1b3b31; --ink:#202e26; --muted:#5a685e; --line:#d7ded4; --accent:#a44330; --white:#fffefa; --soft:#e7ede2; }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:Georgia,serif;font-weight:500;line-height:1.16;margin:0;color:var(--green)}h1{font-size:clamp(27px,3vw,39px)}h2{font-size:27px}h3{font-size:20px}
+a{color:var(--green)}button,input,textarea,select{font:inherit}
+button{cursor:pointer}button:disabled{opacity:.5;cursor:wait}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #2b7364;outline-offset:2px}
+.top{background:var(--green);color:#fffdf5}.top-in{max-width:1300px;margin:auto;padding:18px 25px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.top strong{display:block;font:500 27px/1.1 Georgia,serif}.top small{color:#bde0c7;letter-spacing:.11em;font-size:10px;font-weight:800;text-transform:uppercase}.top a{color:#fff;border:1px solid #91ab96;border-radius:6px;padding:10px 13px;text-decoration:none}
+.layout{max-width:1300px;margin:0 auto;padding:24px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:24px}
+.sidebar{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px;align-self:start;position:sticky;top:12px}.sidebar .label{font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:750;letter-spacing:.11em;margin:12px 10px 7px}.navbtn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:11px 12px;border:0;background:transparent;border-radius:7px;color:var(--green);text-align:left;font-weight:650;margin:2px 0}.navbtn.active{background:var(--soft)}.navbtn:hover{background:#eef1e9}.count{color:var(--muted);font-size:12px}
+main{min-width:0}.intro{margin-bottom:18px}.intro p{margin:6px 0 0;color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.stat{border:1px solid var(--line);background:var(--white);padding:14px;border-radius:9px}.stat b{display:block;font:500 31px Georgia,serif;color:var(--green)}.stat span{font-size:13px;color:var(--muted)}
+.panel{border:1px solid var(--line);background:var(--white);border-radius:10px;padding:22px;margin-bottom:18px}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:15px}.hint{color:var(--muted);font-size:13px}.small{font-size:13px;color:var(--muted)}
+.btn{padding:9px 14px;border-radius:6px;border:1px solid #9dae9f;background:#fff;color:var(--green);font-weight:700;min-height:41px}.btn:hover{background:var(--soft)}.primary{background:var(--accent);border-color:var(--accent);color:#fff}.primary:hover{background:#843522}.danger{color:#932d27;border-color:#ecc4bd}.danger:hover{background:#fdf1ee}.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+input[type=text],input[type=url],input[type=date],input[type=number],input[type=password],input[type=search],textarea,select{width:100%;border:1px solid #96a99a;border-radius:6px;background:#fffefa;color:var(--ink);padding:10px;min-height:42px}textarea{min-height:108px;resize:vertical}label span{display:block;margin-bottom:5px;font-weight:700;color:var(--green)}label{display:block}.fieldgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.wide{grid-column:1/-1}
+.record{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-top:1px solid var(--line)}.record-title{font-weight:740}.record-details{color:var(--muted);font-size:13px;overflow-wrap:anywhere}.record-info{min-width:0}.record .btn{min-height:34px;padding:5px 10px;font-size:13px}.record-actions{flex-shrink:0}.muted{color:var(--muted)}.notice{padding:11px 13px;background:#eef1e9;border-radius:8px;border:1px solid #cfdfd2;margin:11px 0}.warn{background:#fff8ed;border-color:#f2dfb9}.status{font-size:13px;margin:12px 0;min-height:20px;color:#315c41;font-weight:650}
+hr{border:0;border-top:1px solid var(--line);margin:22px 0}.box-stack{display:grid;gap:14px}.limit{max-width:720px}.spread{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+input[type=file]{max-width:100%;font-size:13px}.check{display:flex;align-items:flex-start;gap:9px}.check input{width:18px;height:18px;margin-top:3px;flex:none}.check span{font-weight:400}
+dialog{border:1px solid var(--line);border-radius:11px;padding:0;width:min(720px,calc(100% - 26px));max-height:92vh;box-shadow:0 16px 75px #0005}dialog::backdrop{background:#101f17a9}.modal{padding:25px}.dialog-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px;gap:12px}.dialog-header button{font-size:20px}.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px;flex-wrap:wrap}
+#message{position:fixed;bottom:18px;right:18px;max-width:min(440px,calc(100% - 36px));background:var(--green);color:#fff;padding:14px 18px;border-radius:8px;box-shadow:0 10px 35px #0003;z-index:10;font-size:14px}
+@media(max-width:930px){.layout{grid-template-columns:1fr}.sidebar{position:static;display:flex;gap:6px;flex-wrap:wrap}.sidebar .label{width:100%;margin:5px}.navbtn{width:auto}.cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:620px){.layout{padding:14px}.panel{padding:16px}.fieldgrid{grid-template-columns:1fr}.wide{grid-column:auto}.record{align-items:flex-start;flex-direction:column}.top-in{padding:16px}.cards{gap:8px}}
+
+.login-gate{max-width:560px;margin:50px auto;padding:28px;background:var(--white);border:1px solid var(--line);border-radius:12px}
+.login-gate h2{margin-bottom:12px}.login-gate label{margin-top:13px}.login-gate .actions{margin-top:17px}
+#logout-button{background:transparent;color:#fff;border-color:#93aa99}
+.maintenance-panel{border-color:#b1cbb2;background:#f4f8f1}
+.maintenance-switch{display:flex;align-items:center;gap:12px;font-weight:700;color:var(--green);margin:14px 0}
+.maintenance-switch input{appearance:none;-webkit-appearance:none;width:55px;height:30px;background:#ad4939;border-radius:30px;position:relative;cursor:pointer;flex:none;border:1px solid #934032;transition:background .2s}
+.maintenance-switch input::after{content:"";position:absolute;left:3px;top:3px;height:22px;width:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0005;transition:transform .2s}
+.maintenance-switch input:checked{background:#26794d;border-color:#1d5c3d}
+.maintenance-switch input:checked::after{transform:translateX(25px)}
+.maintenance-switch input:disabled{opacity:.45;cursor:not-allowed}
+.maintenance-status{font-weight:800;color:#315b42}
+.maintenance-status.off{color:#983d2d}
+.poster-tools{border-top:1px solid var(--line);margin-top:16px;padding-top:14px;display:grid;gap:10px}
+.poster-preview{max-width:190px;max-height:220px;object-fit:contain;border:1px solid var(--line);border-radius:6px}
+.poster-tools input[type=file]{width:100%}
+[hidden]{display:none!important}
+</style>
+<script src="./config.js"></script>
+<script src="./cloud.js"></script>
+</head>
+<body>
+<header class="top"><div class="top-in"><div><small>Administrarea proiectului · Dobrițoiu Sevastiana</small><strong>Biblioteca „Păstorel Teodoreanu”</strong></div><div class="actions"><button id="logout-button" class="btn" type="button" hidden>Deconectare</button><a href="./index.html" target="_blank" rel="noopener">Deschide site-ul cititorilor ↗</a></div></div></header>
+<section class="login-gate" id="login-gate" hidden aria-label="Conectare bibliotecar">
+ <h2>Autentificare bibliotecar</h2>
+ <p class="hint"><strong>Responsabilă de proiect, administrare și lansare:</strong> bibliotecar Dobrițoiu Sevastiana. Accesul este permis numai contului autorizat în baza de date.</p>
+ <form id="login-form">
+  <label><span>Adresă e-mail</span><input id="login-email" type="email" autocomplete="username" required></label>
+  <label><span>Parolă</span><input id="login-password" type="password" autocomplete="current-password" required></label>
+  <div class="actions"><button type="submit" id="login-button" class="btn primary">Conectează-te</button></div>
+ </form>
+ <p class="status" id="login-status" role="status"></p>
+ <p class="hint">Contul se creează în Supabase de către instituție; nu există parole implicite.</p>
+</section>
+<div class="layout" id="admin-layout"><aside class="sidebar" id="sidebar" aria-label="Administrare"><p class="label">Conținut</p>
+<button type="button" class="navbtn active" data-tab="books">Fondul de carte <span class="count" id="n-books"></span></button>
+<button type="button" class="navbtn" data-tab="news">Noutăți <span class="count" id="n-news"></span></button>
+<button type="button" class="navbtn" data-tab="events">Evenimente <span class="count" id="n-events"></span></button>
+<button type="button" class="navbtn" data-tab="resources">Biblioteca electronică <span class="count" id="n-resources"></span></button>
+<button type="button" class="navbtn" data-tab="gallery">Galerie foto <span class="count" id="n-gallery"></span></button>
+<button type="button" class="navbtn" data-tab="rubrics">Alte rubrici <span class="count" id="n-rubrics"></span></button>
+<p class="label">Bibliotecă</p><button type="button" class="navbtn" data-tab="settings">Program și prezentare</button>
+<p class="label">Publicare</p><button type="button" class="navbtn" data-tab="publish">Salvare și publicare</button>
+</aside>
+<main><div class="intro"><h1>Administrarea bibliotecii</h1><p class="small"><strong>Inițiatoare și responsabilă de administrare și lansare:</strong> bibliotecar Dobrițoiu Sevastiana.</p><p>Adaugă cărți, redactează anunțuri și pregătește informațiile pentru publicare. Modificările se păstrează într-un draft până când alegi „Publică online”.</p></div>
+<section class="panel maintenance-panel" id="maintenance-panel">
+ <div class="panel-heading"><div><h2>Site cititori: ON / OFF</h2><p class="hint">Închide temporar afișarea publică pentru lucrări de mentenanță, fără să blochezi administrarea.</p></div><span class="maintenance-status" id="maintenance-status">Stare necunoscută</span></div>
+ <label class="maintenance-switch" for="maintenance-toggle"><input id="maintenance-toggle" type="checkbox" role="switch" disabled><span id="maintenance-toggle-label">ON – Site vizibil pentru cititori</span></label>
+ <label><span>Mesaj pentru vizitatori în timpul mentenanței</span><textarea id="maintenance-message-edit" rows="2" maxlength="500" placeholder="Site-ul este temporar indisponibil pentru actualizări.">Site-ul este temporar indisponibil pentru actualizări. Vă mulțumim pentru înțelegere.</textarea></label>
+ <div class="actions"><button type="button" class="btn" id="save-maintenance-message" disabled>Salvează mesajul de mentenanță</button></div><p class="hint" id="maintenance-help">Comutatorul devine activ după conectarea bazei de date și autentificare. Apăsarea lui publică imediat noua stare.</p>
+</section>
+<section class="cards" aria-label="Situație"><div class="stat"><b id="stat-books">0</b><span>Titluri în catalog</span></div><div class="stat"><b id="stat-news">0</b><span>Noutăți</span></div><div class="stat"><b id="stat-events">0</b><span>Evenimente</span></div><div class="stat"><b id="stat-resources">0</b><span>Resurse electronice</span></div></section>
+<section class="panel" id="records-panel"><div class="panel-heading"><div><h2 id="section-heading">Fondul de carte</h2><p class="hint" id="section-description">Introduceți titlurile din biblioteca reală.</p></div><button type="button" class="btn primary" id="add-record">+ Adaugă</button></div>
+<div class="actions"><input type="search" id="search-records" placeholder="Caută în această secțiune" aria-label="Caută înregistrări" style="max-width:420px"><span class="small" id="record-count"></span></div><div id="records"></div></section>
+<section class="panel" id="settings-panel" hidden><div class="panel-heading"><h2>Program și prezentare</h2><button type="button" class="btn primary" id="save-settings">Salvează</button></div>
+<div class="box-stack limit"><div><h3>Programul bibliotecii</h3><p class="hint">Bifează „Confirmat” numai după verificarea orarului.</p><label class="check"><input id="program-confirmed" type="checkbox"><span>Orarul este confirmat și poate fi afișat public.</span></label></div><div class="fieldgrid" id="program-fields"></div><label><span>Observații despre program</span><textarea id="program-notes" placeholder="De exemplu: program special în vacanță"></textarea></label><hr><div><h3>Despre bibliotecă</h3><p class="hint">Textele sunt afișate în secțiunea „Despre bibliotecă”.</p><label class="check"><input type="checkbox" id="info-confirmed"><span>Informațiile sunt verificate și pot fi publicate.</span></label></div><div id="info-fields" class="box-stack"></div><hr><div><h3>Recomandarea săptămânii</h3><p class="hint">O carte prezentată special pe pagina catalogului.</p></div><label><span>Titlu</span><input type="text" id="recommendation-title"></label><label><span>Autor</span><input type="text" id="recommendation-author"></label><label><span>Scurtă prezentare</span><textarea id="recommendation-summary"></textarea></label></div></section>
+<section class="panel" id="publish-panel" hidden><div class="panel-heading"><h2>Salvare, copie de siguranță și publicare</h2></div>
+<div class="box-stack"><div class="notice">Modificările se păstrează într-un <b>draft local</b>. Pentru afișarea lor pe site-ul cititorilor, folosește butonul „Publică online acum”. Copiile JSON sunt recomandate pentru siguranță.</div>
+<div><h3>1. Copie de siguranță</h3><p class="hint">Descarcă toate cărțile, anunțurile și setările într-un fișier JSON.</p><div class="actions"><button class="btn primary" type="button" id="export-json">Descarcă datele JSON</button><label class="btn" for="import-json" style="cursor:pointer">Încarcă date dintr-o copie JSON</label><input type="file" id="import-json" accept=".json,application/json" hidden></div></div>
+<hr><div><h3>2. Importul fondului de carte din Excel</h3><p class="hint">În Excel, salvează tabelul ca <b>CSV UTF-8</b>. Coloane acceptate: Titlu, Autor, Domeniu/Gen, Editura, An, ISBN, Exemplare, Cota. Înregistrările noi se adaugă fără a dubla automat cărțile deja existente.</p><div class="actions"><label class="btn" for="import-csv" style="cursor:pointer">Importă catalog CSV</label><input id="import-csv" type="file" accept=".csv,text/csv" hidden></div></div>
+<hr><div><h3>3. Publicare sincronizată</h3>
+ <div class="notice" id="online-status">Conectarea online nu a fost configurată.</div>
+ <div class="actions" style="margin:10px 0"><button class="btn" type="button" id="reload-public">Reîncarcă datele publicate</button></div>
+ <p class="hint">Publicarea actualizează baza de date comună. Cititorii primesc automat noutățile (la următoarea verificare, aproximativ 20 de secunde), iar afișele încărcate sunt afișate pe site.</p>
+ <label class="check"><input type="checkbox" id="mark-live"><span>Am verificat conținutul și confirm că datele demonstrative au fost înlocuite; site-ul poate fi afișat fără eticheta de previzualizare.</span></label>
+ <div class="actions" style="margin-top:14px"><button class="btn primary" type="button" id="publish-online" disabled>Publică online acum</button><span id="publish-result" class="small" role="status"></span></div>
+ </div></div>
+</section>
+<section class="panel" id="book-extra"><h3>Recomandare pentru catalog</h3><p class="small">Poți importa multe titluri simultan dintr-un CSV, folosind secțiunea „Salvare și publicare”. Pentru exemplare, notează câte cărți există, dar disponibilitatea împrumutului trebuie verificată în continuare la bibliotecă.</p><button class="btn" type="button" id="go-import">Mergi la import CSV</button></section>
+<div class="status" id="draft-status" role="status"></div>
+</main></div>
+<dialog id="edit-dialog" aria-labelledby="dialog-title"><form id="edit-form" class="modal"><div class="dialog-header"><h2 id="dialog-title">Adaugă</h2><button class="btn" type="button" id="close-dialog" aria-label="Închide">×</button></div><div id="dynamic-fields" class="fieldgrid"></div><div class="poster-tools" id="poster-tools" hidden>
+ <label><span>Încarcă un afiș al evenimentului (JPG, PNG sau WebP, până la 6 MB)</span><input id="poster-input" type="file" accept="image/jpeg,image/png,image/webp"></label>
+ <img id="poster-preview" class="poster-preview" alt="Previzualizarea afișului" hidden>
+ <label><span>Descrierea afișului pentru accesibilitate</span><input id="poster-alt" type="text" maxlength="180" placeholder="De exemplu: afișul atelierului de lectură"></label>
+ <label class="check"><input type="checkbox" id="poster-remove"><span>Elimină afișul de la acest eveniment</span></label>
+ <p class="hint">Afișele sunt comprimate automat. Publică numai imagini pentru care biblioteca are drepturi și permisiunea persoanelor fotografiate, dacă este cazul.</p>
+ </div><div class="modal-actions"><button type="button" class="btn" id="cancel-dialog">Anulează</button><button type="submit" class="btn primary">Salvează înregistrarea</button></div></form></dialog>
+<div id="message" hidden role="status"></div>
+<script type="application/json" id="initial-data">{"books": [{"title": "Amintiri din copilărie", "author": "Ion Creangă", "genre": "Literatură română"}, {"title": "Povești", "author": "Ion Creangă", "genre": "Lectură pentru copii"}, {"title": "Poezii", "author": "Mihai Eminescu", "genre": "Poezie"}, {"title": "Baltagul", "author": "Mihail Sadoveanu", "genre": "Literatură română"}, {"title": "Dumbrava minunată", "author": "Mihail Sadoveanu", "genre": "Lectură pentru copii"}, {"title": "La Medeleni", "author": "Ionel Teodoreanu", "genre": "Literatură română"}, {"title": "Cireșarii", "author": "Constantin Chiriță", "genre": "Lectură pentru copii"}], "recommendation": {"title": "Amintiri din copilărie", "author": "Ion Creangă"}, "news": [{"title": "Biblioteca pe site-ul Primăriei", "body": "Descoperă informațiile publicate de Primăria Brusturoasa despre biblioteca din comună.", "source": "https://brusturoasa.ro/comunitate/cultura/biblioteca-comunala-pastorel-teodoreanu/"}], "events": [{"id": "demo-bnr-noiembrie", "date": "2026-11-12", "end_date": "2026-11-19", "time": "", "place": "Biblioteca Națională, București", "institution": "Biblioteca Națională a României", "category": "Educație", "title": "„Toamna în Capitală” — concurs de artă pentru copii și tineri", "body": "Concurs de pictură, desen și tehnică mixtă. Organizatorul precizează vârstele și condițiile pentru trimiterea lucrărilor.", "source": "https://bibnat.ro/toamna-in-capitala-concurs-de-pictura/", "featured": true}, {"id": "demo-atelier", "date": "2026-11-20", "end_date": "", "time": "16:00", "place": "Brusturoasa", "institution": "Biblioteca „Păstorel Teodoreanu”", "category": "Lectură", "title": "Model de anunț · Atelier de lectură în familie", "body": "Exemplu pentru previzualizare. Bibliotecarul poate completa durata, vârsta participanților și detaliile atelierului.", "source": "", "featured": true}], "resources": [{"id": "demonstratie-editie", "title": "12 lecții despre Europa", "author": "Pascal Fontaine", "body": "Broșură a Oficiului pentru Publicații al Uniunii Europene. Exemplu de resursă cu original și ediție în limba română.", "date": "2018-04-10", "source": "https://op.europa.eu/en/publication-detail/-/publication/a5ba73c6-3c6a-11e8-b5fe-01aa75ed71a1/", "romanian_source": "https://op.europa.eu/webpub/com/eu-in-12-lessons/ro/"}], "program": {}, "public_info": {}, "video": {}, "live": {}, "logo": "", "rubrics": [{"id": "demo", "title": "Cum aflu dacă o carte este disponibilă?", "body": "Caută titlul în catalog, apoi contactează biblioteca pentru a verifica disponibilitatea unui exemplar. Aceasta este o rubrică de exemplu pentru previzualizare.", "source": "", "link_label": ""}], "gallery": [{"name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.webp", "kind": "photo", "title": "Sediul bibliotecii din Brusturoasa", "description": "Vedere din stradă cu intrarea, treptele și rampa."}]}</script>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const DRAFT_KEY = 'biblioteca-brusturoasa-draft-v3';
+const cloud = window.LibraryCloud;
+let publishedRevision = null, unpublishedChanges = false, maintenanceEnabled = false;
+const schemas = {
+ books:{title:'Fondul de carte',desc:'Titluri, autori, clasificări și exemplare din colecția bibliotecii.',fields:[['title','Titlu','text',1],['author','Autor','text',1],['genre','Domeniu / Gen literar','text'],['publisher','Editura','text'],['year','Anul apariției','text'],['isbn','ISBN','text'],['copies','Număr de exemplare','number'],['shelf','Cotă / raft','text']]},
+ news:{title:'Noutăți',desc:'Anunțuri și informații pentru cititori.',fields:[['title','Titlul anunțului','text',1],['date','Data publicării','date'],['body','Textul anunțului','textarea',1],['source','Link pentru detalii (https://)','url']]},
+ events:{title:'Evenimente',desc:'Ateliere, întâlniri, expoziții și alte activități.',fields:[['title','Titlul evenimentului','text',1],['date','Data începerii','date',1],['end_date','Data încheierii','date'],['time','Ora','text'],['place','Locul','text'],['institution','Organizator','text'],['category','Categorie','text'],['body','Descriere','textarea'],['source','Link către anunț (https://)','url'],['featured','Apare în agenda culturală','checkbox']]},
+ resources:{title:'Biblioteca electronică',desc:'Resurse digitale și legături autorizate.',fields:[['title','Titlu','text',1],['author','Autor','text'],['date','Data','date'],['body','Descriere','textarea'],['source','Sursa originală (https://)','url'],['romanian_source','Versiune în limba română (https://)','url']]},
+ gallery:{title:'Galerie foto',desc:'Pentru fotografii noi folosește un URL public https:// către o imagine; fotografiile existente pot rămâne în site.',fields:[['title','Titlul fotografiei','text',1],['description','Descriere / text alternativ','textarea'],['url','URL public imagine (https://)','url']]},
+ rubrics:{title:'Alte rubrici',desc:'Întrebări frecvente și informații utile.',fields:[['title','Titlu','text',1],['body','Conținut','textarea',1],['source','Link opțional (https://)','url'],['link_label','Textul legăturii','text']]}
+};
+const days={luni:'Luni',marti:'Marți',miercuri:'Miercuri',joi:'Joi',vineri:'Vineri',sambata:'Sâmbătă',duminica:'Duminică'};
+const info={intro:'Prezentare',services:'Servicii și acces',collections:'Colecții',activities:'Activități',notes:'Precizări'};
+const initial=JSON.parse($('initial-data').textContent);
+let data;
+let draftFromLocal=false;
+try {draftFromLocal=!!localStorage.getItem(DRAFT_KEY);data=JSON.parse(localStorage.getItem(DRAFT_KEY) || JSON.stringify(initial));}catch{data=structuredClone(initial);}
+let active='books', editing=-1, noticeTimer;
+function h(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=String(txt);return e;}
+function notify(message){const m=$('message');m.textContent=message;m.hidden=false;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>m.hidden=true,4500);}
+function markSaved(){unpublishedChanges=true;try{localStorage.setItem(DRAFT_KEY,JSON.stringify(data));$('draft-status').textContent='✓ Draft salvat în acest browser. Publică online sau exportă o copie pentru siguranță.';}catch(err){$('draft-status').textContent='Nu s-a putut salva draftul în acest browser. Exportă datele JSON pentru a evita pierderea lor.';notify('Atenție: spațiul browserului este insuficient pentru draft.');}renderCounters();}
+function renderCounters(){for(const key of Object.keys(schemas)){const el=$('n-'+key);if(el)el.textContent=Array.isArray(data[key])?data[key].length:0;}for(const key of ['books','news','events','resources'])$('stat-'+key).textContent=(data[key]||[]).length.toLocaleString('ro');}
+function render(){for(const b of document.querySelectorAll('.navbtn')){b.classList.toggle('active',b.dataset.tab===active);b.setAttribute('aria-current',b.dataset.tab===active?'page':'false');}
+ const records=!!schemas[active];$('records-panel').hidden=!records;$('book-extra').hidden=active!=='books';$('settings-panel').hidden=active!=='settings';$('publish-panel').hidden=active!=='publish';
+ if(records){$('section-heading').textContent=schemas[active].title;$('section-description').textContent=schemas[active].desc;$('search-records').value='';renderRecords();}
+ if(active==='settings')populateSettings();}
+function renderRecords(){const root=$('records');root.replaceChildren();const all=Array.isArray(data[active])?data[active]:[];const query=($('search-records').value||'').toLocaleLowerCase('ro');const shown=all.map((v,i)=>({v,i})).filter(({v})=>Object.values(v).some(val=>String(val).toLocaleLowerCase('ro').includes(query))).slice(0,150);
+ $('record-count').textContent=`${all.filter(v=>Object.values(v).some(val=>String(val).toLocaleLowerCase('ro').includes(query))).length} rezultate`+(shown.length>=150?' · primele 150 afișate':'');
+ if(!shown.length){root.append(h('p','muted','Nu există înregistrări în această secțiune.'));return;}
+ const frag=document.createDocumentFragment();for(const {v,i} of shown){const r=h('div','record'),description=h('div','record-info');description.append(h('div','record-title',v.title||'Fără titlu'));const details=[v.author||v.date||'',v.genre||v.place||'',v.isbn?'ISBN '+v.isbn:'',v.poster?'🖼 Afiș atașat':''].filter(Boolean).join(' · ');if(details)description.append(h('div','record-details',details));const buttons=h('div','actions record-actions');const edit=h('button','btn','Modifică');edit.type='button';edit.addEventListener('click',()=>openRecord(i));const del=h('button','btn danger','Șterge');del.type='button';del.addEventListener('click',()=>deleteRecord(i));buttons.append(edit,del);r.append(description,buttons);frag.append(r);}root.append(frag);}
+function formField([name,label,type,required],value){const wrap=h('label',type==='textarea'?'wide':'');if(type==='checkbox'){wrap.className='check wide';const input=h('input');input.type='checkbox';input.name=name;input.checked=value===true;const text=h('span','',label);wrap.append(input,text);return wrap;}wrap.append(h('span','',label));const input=h(type==='textarea'?'textarea':'input');if(type!=='textarea')input.type=type;input.name=name;input.value=value??'';input.required=!!required;if(type==='url')input.placeholder='https://';if(type==='number')input.min='0';wrap.append(input);return wrap;}
+function openRecord(index){editing=index;const obj=index>=0?data[active][index]:{};$('dialog-title').textContent=(index>=0?'Modifică':'Adaugă')+' · '+schemas[active].title;const root=$('dynamic-fields');root.replaceChildren(...schemas[active].fields.map(f=>formField(f,obj[f[0]])));
+ $('poster-tools').hidden=active!=='events';$('poster-input').value='';$('poster-remove').checked=false;$('poster-alt').value=obj.poster_alt||'';
+ const image=$('poster-preview');image.hidden=!obj.poster;image.src=obj.poster||'';
+ $('edit-dialog').showModal();}
+function deleteRecord(index){const item=data[active][index];if(!confirm('Ștergi „'+(item?.title||'această înregistrare')+'” din draft?'))return;data[active].splice(index,1);markSaved();renderRecords();}
+function checkUrl(str){if(!str)return true;try{const url=new URL(str);return url.protocol==='https:'&&!url.username&&!url.password;}catch{return false;}}
+$('edit-form').addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;const obj=editing>=0?{...data[active][editing]}:{};for(const [name,label,type] of schemas[active].fields){const input=form.elements.namedItem(name);obj[name]=type==='checkbox'?input.checked:String(input.value||'').trim();if(type==='url'&&!checkUrl(obj[name])){notify('Link invalid: '+label+'. Sunt acceptate doar adrese https://');input.focus();return;}}
+ if(active==='events'){
+   if($('poster-remove').checked){delete obj.poster;delete obj.poster_alt;}
+   else if($('poster-input').files[0]){
+     const submit = form.querySelector('[type=submit]');submit.disabled=true;
+     try {obj.poster=await convertPoster($('poster-input').files[0]);}
+     catch(err){notify('Afișul nu a putut fi pregătit: '+err.message);submit.disabled=false;return;}
+     finally{submit.disabled=false;}
+   }
+   if(!$('poster-remove').checked)obj.poster_alt=$('poster-alt').value.trim();
+ }
+ if(active==='gallery'&&!obj.url&&!obj.name){notify('Pentru o fotografie nouă este necesar un URL https:// către imagine.');return;}
+ if(['events','resources','rubrics'].includes(active)&&!obj.id)obj.id='item-'+Math.random().toString(36).slice(2,10);
+ if(active==='gallery'&&!obj.kind)obj.kind='photo';
+ if(editing<0)data[active].unshift(obj);else data[active][editing]=obj;
+ markSaved();$('edit-dialog').close();renderRecords();notify('Înregistrare salvată în draft.');});
+$('close-dialog').onclick=$('cancel-dialog').onclick=()=>$('edit-dialog').close();$('add-record').onclick=()=>openRecord(-1);$('search-records').addEventListener('input',renderRecords);
+for(const b of document.querySelectorAll('.navbtn'))b.addEventListener('click',()=>{active=b.dataset.tab;render();window.scrollTo({top:0,behavior:'smooth'});});$('go-import').onclick=()=>{active='publish';render();};
+function initSettings(){for(const [key,label] of Object.entries(days))$('program-fields').append(formField([key,label,'text'],' '));for(const [key,label]of Object.entries(info))$('info-fields').append(formField([key,label,'textarea'],' '));}
+function populateSettings(){const p=data.program||{},i=data.public_info||{};$('program-confirmed').checked=!!p.confirmed;for(const key of Object.keys(days))$('program-fields').querySelector('[name="'+key+'"]').value=p.days?.[key]||'';$('program-notes').value=p.notes||'';$('info-confirmed').checked=!!i.confirmed;for(const key of Object.keys(info))$('info-fields').querySelector('[name="'+key+'"]').value=i[key]||'';$('recommendation-title').value=data.recommendation?.title||'';$('recommendation-author').value=data.recommendation?.author||'';$('recommendation-summary').value=data.recommendation?.summary||'';}
+$('save-settings').onclick=()=>{const daysData={};for(const key of Object.keys(days))daysData[key]=$('program-fields').querySelector('[name="'+key+'"]').value.trim();data.program={...data.program,confirmed:$('program-confirmed').checked,days:daysData,notes:$('program-notes').value.trim()};const infoData={...data.public_info,confirmed:$('info-confirmed').checked};for(const key of Object.keys(info))infoData[key]=$('info-fields').querySelector('[name="'+key+'"]').value.trim();data.public_info=infoData;data.recommendation={title:$('recommendation-title').value.trim(),author:$('recommendation-author').value.trim(),summary:$('recommendation-summary').value.trim()};markSaved();notify('Programul și prezentarea au fost salvate în draft.');};
+function download(name,text,mime){const file=new Blob([text],{type:mime});const url=URL.createObjectURL(file);const a=h('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);}
+$('export-json').onclick=()=>download('biblioteca-data.json',JSON.stringify(data,null,2)+'\n','application/json;charset=utf-8');
+$('import-json').addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{const obj=JSON.parse(await f.text());if(!obj||typeof obj!=='object'||!Array.isArray(obj.books))throw Error('Fișierul nu conține o listă de cărți.');if(!confirm('Înlocuiești draftul cu datele din fișier?'))return;data={...structuredClone(initial),...obj};for(const k of Object.keys(schemas))if(!Array.isArray(data[k]))data[k]=[];markSaved();render();notify('Datele au fost importate.');}catch(err){notify('Nu s-a putut importa JSON: '+err.message);}finally{e.target.value='';}});
+function parseCsv(text){text=text.replace(/^\uFEFF/,'');const head=text.split(/\r?\n/)[0]||'';const separators=[',',';','\t'];const sep=separators.sort((a,b)=>head.split(b).length-head.split(a).length)[0];const rows=[];let row=[],field='',quoted=false;for(let i=0;i<text.length;i++){const c=text[i];if(c==='"'){if(quoted&&text[i+1]==='"'){field+='"';i++;}else quoted=!quoted;}else if(c===sep&&!quoted){row.push(field);field='';}else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);if(row.some(x=>x.trim()))rows.push(row);row=[];field='';}else field+=c;}row.push(field);if(row.some(x=>x.trim()))rows.push(row);return rows;}
+function normal(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'');}
+$('import-csv').addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{const rows=parseCsv(await f.text());if(rows.length<2)throw Error('Tabelul nu conține rânduri de importat.');const names={title:['titlu','titlucarte','denumire','titlul'],author:['autor','autori'],genre:['gen','domeniu','categorie','genliterar'],publisher:['editura','editor'],year:['an','anaparitie','anulaparitiei'],isbn:['isbn'],copies:['exemplare','nrexemplare','numarexemplare','bucati'],shelf:['cota','raft','cotasemnalizare']};const columns={};rows[0].forEach((col,index)=>{for(const [key,aliases] of Object.entries(names))if(aliases.includes(normal(col)))columns[key]=index;});if(columns.title===undefined)throw Error('Prima linie trebuie să conțină coloana Titlu.');let added=0,skipped=0;const existing=new Set((data.books||[]).map(v=>v.isbn?'isbn:'+normal(v.isbn):'title:'+normal(v.title)+'|'+normal(v.author)));for(const row of rows.slice(1)){const obj={};for(const [key,index] of Object.entries(columns))obj[key]=String(row[index]||'').trim();if(!obj.title){skipped++;continue;}const unique=obj.isbn?'isbn:'+normal(obj.isbn):'title:'+normal(obj.title)+'|'+normal(obj.author);if(existing.has(unique)){skipped++;continue;}existing.add(unique);data.books.push(obj);added++;}markSaved();render();notify(`Import CSV: ${added} cărți adăugate; ${skipped} rânduri ignorate sau duplicate.`);}catch(err){notify('Nu s-a putut importa CSV: '+err.message);}finally{e.target.value='';}});
+// Afiș: compresie în browser, fără biblioteci externe și fără date ascunse.
+function convertPoster(file){
+ return new Promise((resolve,reject)=>{
+  if(!['image/png','image/jpeg','image/webp'].includes(file.type)) return reject(Error('Folosiți JPG, PNG sau WebP.'));
+  if(file.size>6*1024*1024) return reject(Error('Fișierul depășește 6 MB.'));
+  const objectUrl=URL.createObjectURL(file), img=new Image();
+  img.onload=()=>{try{
+   const factor=Math.min(1,1400/img.naturalWidth,1900/img.naturalHeight);
+   const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.naturalWidth*factor));canvas.height=Math.max(1,Math.round(img.naturalHeight*factor));
+   canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+   const result=canvas.toDataURL('image/webp',.8);
+   if(!result.startsWith('data:image/webp;base64,'))throw Error('Browserul nu poate comprima în WebP.');
+   if(result.length>1700000)throw Error('Imaginea este prea complexă; micșorați-o înainte de încărcare.');
+   resolve(result);
+  }catch(e){reject(e);}finally{URL.revokeObjectURL(objectUrl);}};
+  img.onerror=()=>{URL.revokeObjectURL(objectUrl);reject(Error('Imaginea nu poate fi deschisă.'));};
+  img.src=objectUrl;
+ });
+}
+$('poster-input').addEventListener('change',async e=>{
+ const file=e.target.files?.[0];if(!file)return;
+ try {const image=await convertPoster(file);$('poster-preview').src=image;$('poster-preview').hidden=false;$('poster-remove').checked=false;}
+ catch(error){notify(error.message);e.target.value='';}
+});
+$('poster-remove').addEventListener('change',e=>{if(e.target.checked){$('poster-input').value='';$('poster-preview').hidden=true;}});
+function normalizeContent(remote){
+ const content={...remote};
+ for(const key of Object.keys(schemas))if(!Array.isArray(content[key]))content[key]=[];
+ content.program=content.program||{};content.public_info=content.public_info||{};
+ return content;
+}
+function updateMaintenancePanel(value){
+ maintenanceEnabled=!!value?.enabled;
+ $('maintenance-toggle').checked=!maintenanceEnabled;
+ $('maintenance-toggle-label').textContent=maintenanceEnabled?'OFF – Site în mentenanță':'ON – Site vizibil pentru cititori';
+ $('maintenance-status').textContent=maintenanceEnabled?'OFF · Mentenanță':'ON · Public';
+ $('maintenance-status').classList.toggle('off',maintenanceEnabled);
+ if(value?.message)$('maintenance-message-edit').value=value.message;
+}
+function setAuthenticated(enabled){
+ $('admin-layout').hidden=cloud.enabled&&!enabled;
+ $('login-gate').hidden=!cloud.enabled||enabled;
+ $('logout-button').hidden=!cloud.enabled||!enabled;
+ $('publish-online').disabled=!cloud.enabled||!enabled;
+ $('maintenance-toggle').disabled=!cloud.enabled||!enabled;
+ $('save-maintenance-message').disabled=!cloud.enabled||!enabled;
+ $('reload-public').disabled=cloud.enabled&&!enabled;
+ $('online-status').textContent=!cloud.enabled?
+   'MOD DEMONSTRAȚIE. Completați config.js și creați contul instituțional. Datele rămân numai în browser.' :
+   enabled?'Conectat la baza de date online. Orice publicare va actualiza site-ul cititorilor.':'Este necesară autentificarea bibliotecarului.';
+ $('maintenance-help').textContent=enabled?'Comutarea ON/OFF se publică imediat în baza de date (independent de draftul nepublicat).':'Comutator disponibil doar după conectare și autentificare.';
+}
+async function readPublished(ask=false){
+ if(ask&&unpublishedChanges&&!confirm('Reîncarci datele online? Draftul local nepublicat va fi înlocuit. Descarcă întâi o copie JSON, dacă dorești să îl păstrezi.'))return;
+ try{
+   let content;
+   if(cloud.enabled){const result=await cloud.read();content=result.data;publishedRevision=result.revision;}
+   else{const response=await fetch('./biblioteca-data.json',{cache:'no-store'});if(!response.ok)throw Error('Nu există fișier local publicat.');content=await response.json();}
+   data=normalizeContent(content);
+   unpublishedChanges=false;
+   if(ask)try{localStorage.removeItem(DRAFT_KEY);}catch{}
+   $('mark-live').checked=data._status==='live';
+   updateMaintenancePanel(data.maintenance);
+   renderCounters();render();
+   $('draft-status').textContent=cloud.enabled?'✓ Datele publicate au fost încărcate.':'✓ Date de demonstrație; fără publicare online.';
+   $('publish-result').textContent=cloud.enabled?'Versiunea online: '+publishedRevision:'';
+   if(ask)notify('Informațiile publicate au fost reîncărcate.');
+ }catch(e){$('publish-result').textContent='Nu s-au putut încărca datele: '+e.message;notify('Eroare la citirea conținutului: '+e.message);}
+}
+$('reload-public').onclick=()=>readPublished(true);
+$('publish-online').onclick=async()=>{
+ if(!cloud.enabled||!cloud.hasSession)return notify('Autentifică-te mai întâi.');
+ if(publishedRevision===null)return notify('Nu există o versiune online încărcată. Încearcă Reîncarcă datele publicate.');
+ const button=$('publish-online');button.disabled=true;$('publish-result').textContent='Pregătesc publicarea…';
+ try {
+   const output=structuredClone(data);
+   // Comutatorul de mentenanță este independent de publicarea catalogului:
+   // citim starea curentă și evităm revenirea accidentală la o stare veche.
+   const live=await cloud.read();
+   if(live.revision!==publishedRevision)throw Error('Altă modificare a fost publicată între timp. Exportă draftul, apoi reîncarcă versiunea online înainte de a publica.');
+   output.maintenance=live.data.maintenance||{enabled:false,message:''};
+   for(const event of output.events||[]){
+     if(typeof event.poster==='string'&&event.poster.startsWith('data:image/webp;base64,')){
+       $('publish-result').textContent='Încarc afișul pentru „'+event.title+'”…';
+       event.poster=await cloud.uploadPoster(event.poster);
+     }
+   }
+   output._status=$('mark-live').checked?'live':'preview';
+   const result=await cloud.publish(output,publishedRevision);
+   data=output;publishedRevision=result.revision;unpublishedChanges=false;
+   try{localStorage.removeItem(DRAFT_KEY);}catch{}
+   updateMaintenancePanel(output.maintenance);
+   renderCounters();render();
+   $('draft-status').textContent='✓ Toate modificările sunt publicate online.';
+   $('publish-result').textContent='✓ Publicat! Versiunea '+publishedRevision+'. Cititorii primesc actualizarea automat.';
+   notify('Catalogul, evenimentele și afișele au fost publicate.');
+ }catch(e){$('publish-result').textContent='Publicarea a eșuat: '+e.message;notify('Draftul rămâne salvat local.');}
+ finally{button.disabled=false;}
+};
+$('maintenance-toggle').addEventListener('change',async event=>{
+ const enabled=!event.target.checked;
+ const previous=!maintenanceEnabled;
+ if(enabled&&!confirm('Închizi acum afișarea site-ului pentru vizitatori? Panoul bibliotecarului va rămâne disponibil.')){
+   event.target.checked=previous;return;
+ }
+ const toggle=$('maintenance-toggle');toggle.disabled=true;
+ try{
+   const live=await cloud.read();
+   const message=$('maintenance-message-edit').value.trim().slice(0,500)||'Site-ul este temporar indisponibil pentru actualizări. Vă mulțumim pentru înțelegere.';
+   const content={...live.data,maintenance:{enabled,message,updated_at:new Date().toISOString()}};
+   const result=await cloud.publish(content,live.revision);
+   if(!unpublishedChanges){data=normalizeContent(content);publishedRevision=result.revision;}
+   else if(publishedRevision===live.revision){publishedRevision=result.revision;data.maintenance=content.maintenance;}
+   else {data.maintenance=content.maintenance;}
+   updateMaintenancePanel(content.maintenance);
+   $('maintenance-help').textContent=enabled?'Mentenanța este activă. Vizitatorii vor vedea mesajul de mentenanță la actualizare.':'Site-ul este din nou vizibil pentru cititori.';
+   notify(enabled?'Site-ul a fost trecut în mentenanță.':'Site-ul cititorilor a fost redeschis.');
+ }catch(e){toggle.checked=previous;notify('Nu s-a putut schimba starea site-ului: '+e.message);}
+ finally{toggle.disabled=false;}
+});
+$('save-maintenance-message').addEventListener('click',async()=>{
+ if(!cloud.enabled||!cloud.hasSession)return notify('Este necesară conectarea bibliotecarului.');
+ const button=$('save-maintenance-message');button.disabled=true;
+ try{
+   const live=await cloud.read();
+   const message=$('maintenance-message-edit').value.trim().slice(0,500)||'Site-ul este temporar indisponibil pentru actualizări. Vă mulțumim pentru înțelegere.';
+   const content={...live.data,maintenance:{enabled:!!live.data.maintenance?.enabled,message,updated_at:new Date().toISOString()}};
+   const result=await cloud.publish(content,live.revision);
+   if(!unpublishedChanges){data=normalizeContent(content);publishedRevision=result.revision;}
+   else if(publishedRevision===live.revision){publishedRevision=result.revision;data.maintenance=content.maintenance;}
+   else{data.maintenance=content.maintenance;}
+   updateMaintenancePanel(content.maintenance);
+   notify('Mesajul pentru vizitatori a fost actualizat.');
+ }catch(err){notify('Nu s-a putut actualiza mesajul: '+err.message);}
+ finally{button.disabled=false;}
+});
+$('login-form').addEventListener('submit',async e=>{
+ e.preventDefault();const btn=$('login-button');btn.disabled=true;
+ $('login-status').textContent='Se verifică autentificarea…';
+ try {
+   await cloud.login($('login-email').value.trim(),$('login-password').value);
+   $('login-password').value='';
+   const draft=localStorage.getItem(DRAFT_KEY);
+   setAuthenticated(true);
+   await readPublished(false);
+   // Dacă există un draft salvat de bibliotecar, nu îl suprascriem automat:
+   if(draft&&confirm('Există un draft nepublicat în acest browser. Îl restaurezi peste datele online încărcate?')){
+     try{data=normalizeContent(JSON.parse(draft));unpublishedChanges=true;renderCounters();render();markSaved();}catch{}
+   }
+   $('login-status').textContent='';
+ }catch(err){$('login-status').textContent=err.message;}
+ finally{btn.disabled=false;}
+});
+$('logout-button').onclick=async()=>{
+ if(unpublishedChanges&&!confirm('Există modificări nepublicate. Deconectarea le păstrează numai în acest browser. Continui?'))return;
+ await cloud.logout();setAuthenticated(false);$('login-password').value='';
+ data=normalizeContent({books:[],events:[],news:[],resources:[],gallery:[],rubrics:[]});renderCounters();render();
+};
+initSettings();renderCounters();render();
+setAuthenticated(false);
+updateMaintenancePanel({enabled:false});
+$('draft-status').textContent='Draftul este păstrat în browser. Exportă periodic o copie JSON.';
+if(cloud.enabled){
+ cloud.authorized().then(async authorized=>{
+   if(authorized){setAuthenticated(true);await readPublished(false);}
+ }).catch(()=>{});
+}else if(!draftFromLocal){readPublished(false);}
+</script>
+</body></html>
