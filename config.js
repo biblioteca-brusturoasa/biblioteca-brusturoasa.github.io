@@ -1,8 +1,8 @@
-/* CONFIGURARE: completați cu valorile din Supabase → Project Settings → API.
- * Acest fișier este PUBLIC pe site. Folosiți numai cheia publishable/anon;
- * NU introduceți aici service_role, parole, tokenuri private sau chei secrete.
+/* Biblioteca Comunala Pastorel Teodoreanu - configurare PUBLICA Supabase.
+ * Cheia de mai jos este publishable si se poate utiliza in browser.
+ * Nu introduceti aici parole, service_role sau secret keys.
  */
 window.BIBLIOTECA_CONFIG = Object.freeze({
-  supabaseUrl: '', // exemplu: 'https://abcdefghijk.supabase.co'
-  supabasePublishableKey: '' // exemplu: 'sb_publishable_...' sau anon JWT
+  supabaseUrl: 'https://oxzsdxnsovgapcswvqlk.supabase.co',
+  supabasePublishableKey: 'sb_publishable_jnKK01P1hXnvnoG3xlY-pg_yFrPLj27'
 });
