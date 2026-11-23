@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Resetarea parolei – Biblioteca „Păstorel Teodoreanu”</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#173b34;background:#f6f4ee}
+*{box-sizing:border-box}body{margin:0}header{background:#173b34;color:#fff;padding:24px 18px}
+header div{max-width:650px;margin:auto}header small{display:block;text-transform:uppercase;letter-spacing:.1em;font-weight:700;font-size:.7rem}
+header strong{font-family:Georgia,serif;font-size:1.6rem;line-height:1.3}
+main{max-width:540px;margin:44px auto;padding:0 16px}
+section{background:#fff;border:1px solid #d7dfd5;border-radius:12px;padding:25px}
+h1{font:normal 1.8rem Georgia,serif;margin:0 0 12px}p{line-height:1.55}label{display:block;font-weight:700;margin:16px 0 5px}
+input{display:block;width:100%;padding:12px;border:1px solid #8b9d94;border-radius:5px;font:inherit}
+button{background:#ab432f;color:#fff;font:700 1rem system-ui;border:0;border-radius:6px;padding:12px 20px;margin-top:20px;cursor:pointer;width:100%}
+button:disabled{opacity:.6;cursor:wait}a{color:#174e3e}#status{padding:10px;border-radius:6px;margin:12px 0}#status:empty{display:none}
+#status[data-kind="error"]{background:#fff1ec;color:#872f22}#status[data-kind="success"]{background:#e6f5ec;color:#174e3e}
+.nota{font-size:.9rem;color:#52655f}form[hidden],div[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><div><small>Biblioteca Comunală din Brusturoasa</small><strong>„Păstorel Teodoreanu”</strong></div></header>
+<main><section>
+<h1>Schimbarea parolei</h1>
+<p>Această pagină este numai pentru contul autorizat al bibliotecii. Introdu o parolă nouă, diferită de cea folosită la Yahoo.</p>
+<div role="status" aria-live="polite" id="status"></div>
+<form id="form" hidden>
+<label for="pass">Parola nouă</label>
+<input id="pass" type="password" minlength="12" autocomplete="new-password" required placeholder="Cel puțin 12 caractere">
+<label for="pass2">Repetă parola nouă</label>
+<input id="pass2" type="password" minlength="12" autocomplete="new-password" required>
+<button id="submit" type="submit">Salvează parola nouă</button>
+</form>
+<div id="done" hidden><p>Parola a fost schimbată cu succes.</p><p><a href="/admin.html">Deschide panoul bibliotecarei</a> și autentifică-te cu e-mailul existent și parola nouă.</p></div>
+<p class="nota">Nu transmite parola nimănui. Dacă ai ajuns aici fără să apeși pe un e-mail de recuperare recent, cere un nou e-mail din Supabase.</p>
+</section></main>
+<script>
+(()=>{'use strict';
+const URL='https://oxzsdxnsovgapcswvqlk.supabase.co';
+const KEY='sb_publishable_jnKK01P1hXnvnoG3xlY-pg_yFrPLj27';
+const params=new URLSearchParams(location.hash.slice(1));
+const token=params.get('access_token');
+const kind=params.get('type');
+// Scoate tokenul din bara de adrese imediat după încărcare.
+if(location.hash)history.replaceState(null,'',location.pathname);
+const status=document.getElementById('status');
+const form=document.getElementById('form');
+const done=document.getElementById('done');
+const button=document.getElementById('submit');
+function say(msg,kind='error'){status.textContent=msg;status.dataset.kind=kind}
+if(!token||kind!=='recovery'){
+ say('Linkul de recuperare lipsește sau nu mai este valabil. Întoarce-te în Supabase și cere un e-mail nou pentru schimbarea parolei.');
+ return;
+}
+form.hidden=false;
+form.addEventListener('submit',async(e)=>{
+ e.preventDefault();
+ const a=document.getElementById('pass').value;
+ const b=document.getElementById('pass2').value;
+ if(a.length<12){say('Alege o parolă cu minimum 12 caractere.');return}
+ if(a!==b){say('Cele două parole nu coincid.');return}
+ button.disabled=true;button.textContent='Se salvează…';say('Se verifică linkul și se salvează parola…','success');
+ try{
+  const r=await fetch(URL+'/auth/v1/user',{
+   method:'PUT',headers:{'apikey':KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+   body:JSON.stringify({password:a}),cache:'no-store',referrerPolicy:'no-referrer'
+  });
+  let data={};try{data=await r.json()}catch{}
+  if(!r.ok)throw new Error(data.msg||data.message||data.error_description||'Linkul poate fi expirat. Cere un e-mail nou de recuperare.');
+  form.hidden=true;done.hidden=false;say('Parola nouă a fost salvată.','success');
+ }catch(e){say('Nu am putut schimba parola: '+e.message)}
+ finally{button.disabled=false;button.textContent='Salvează parola nouă';document.getElementById('pass').value='';document.getElementById('pass2').value=''}
+});
+})();
+</script>
+</body>
+</html>
