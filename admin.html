@@ -48,18 +48,19 @@ dialog{border:1px solid var(--line);border-radius:11px;padding:0;width:min(720px
 </head>
 <body>
 <header class="top"><div class="top-in"><div><small>Administrarea proiectului · Dobrițoiu Sevastiana</small><strong>Biblioteca „Păstorel Teodoreanu”</strong></div><div class="actions"><button id="logout-button" class="btn" type="button" hidden>Deconectare</button><a href="./index.html" target="_blank" rel="noopener">Deschide site-ul cititorilor ↗</a></div></div></header>
-<section class="login-gate" id="login-gate" hidden aria-label="Conectare bibliotecar">
+<section class="login-gate" id="login-gate" aria-label="Conectare bibliotecar">
  <h2>Autentificare bibliotecar</h2>
+ <p class="status" id="security-setup" role="status" hidden>Administrarea este blocată până la configurarea securizată a contului în Supabase. Site-ul cititorilor rămâne disponibil.</p>
  <p class="hint"><strong>Responsabilă de proiect, administrare și lansare:</strong> bibliotecar Dobrițoiu Sevastiana. Accesul este permis numai contului autorizat în baza de date.</p>
- <form id="login-form">
+ <form id="login-form" hidden>
   <label><span>Adresă e-mail</span><input id="login-email" type="email" autocomplete="username" required></label>
   <label><span>Parolă</span><input id="login-password" type="password" autocomplete="current-password" required></label>
   <div class="actions"><button type="submit" id="login-button" class="btn primary">Conectează-te</button></div>
  </form>
  <p class="status" id="login-status" role="status"></p>
- <p class="hint">Contul se creează în Supabase de către instituție; nu există parole implicite.</p>
+ <p class="hint">Contul este aprobat de instituție și se creează în Supabase. Nicio parolă nu este publicată în GitHub. Nu folosiți panoul pentru date personale ale cititorilor.</p>
 </section>
-<div class="layout" id="admin-layout"><aside class="sidebar" id="sidebar" aria-label="Administrare"><p class="label">Conținut</p>
+<div class="layout" id="admin-layout" hidden><aside class="sidebar" id="sidebar" aria-label="Administrare"><p class="label">Conținut</p>
 <button type="button" class="navbtn active" data-tab="books">Fondul de carte <span class="count" id="n-books"></span></button>
 <button type="button" class="navbtn" data-tab="news">Noutăți <span class="count" id="n-news"></span></button>
 <button type="button" class="navbtn" data-tab="events">Evenimente <span class="count" id="n-events"></span></button>
@@ -129,9 +130,10 @@ const schemas = {
 const days={luni:'Luni',marti:'Marți',miercuri:'Miercuri',joi:'Joi',vineri:'Vineri',sambata:'Sâmbătă',duminica:'Duminică'};
 const info={intro:'Prezentare',services:'Servicii și acces',collections:'Colecții',activities:'Activități',notes:'Precizări'};
 const initial=JSON.parse($('initial-data').textContent);
-let data;
+// Nu încărcăm drafturi din browser înainte de autentificare.
+let data=structuredClone(initial);
 let draftFromLocal=false;
-try {draftFromLocal=!!localStorage.getItem(DRAFT_KEY);data=JSON.parse(localStorage.getItem(DRAFT_KEY) || JSON.stringify(initial));}catch{data=structuredClone(initial);}
+let isEditorAuthenticated=false;
 let active='books', editing=-1, noticeTimer;
 function h(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=String(txt);return e;}
 function notify(message){const m=$('message');m.textContent=message;m.hidden=false;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>m.hidden=true,4500);}
@@ -219,23 +221,28 @@ function updateMaintenancePanel(value){
  if(value?.message)$('maintenance-message-edit').value=value.message;
 }
 function setAuthenticated(enabled){
- $('admin-layout').hidden=cloud.enabled&&!enabled;
- $('login-gate').hidden=!cloud.enabled||enabled;
- $('logout-button').hidden=!cloud.enabled||!enabled;
- $('publish-online').disabled=cloud.enabled&&!enabled;
- $('publish-online').textContent=cloud.enabled?'Publică online acum':'Descarcă datele pentru GitHub';
- $('maintenance-toggle').disabled=cloud.enabled&&!enabled;
- $('save-maintenance-message').disabled=cloud.enabled&&!enabled;
- $('github-manual-control').hidden=cloud.enabled;
- $('reload-public').disabled=cloud.enabled&&!enabled;
- $('online-status').textContent=!cloud.enabled?
-   'MOD GITHUB PAGES: poți crea și descărca fișierul biblioteca-data.json. Publicarea necesită încărcare și Commit changes în GitHub.' :
-   enabled?'Conectat la baza de date online. Orice publicare va actualiza site-ul cititorilor.':'Este necesară autentificarea bibliotecarului.';
- $('maintenance-help').textContent=cloud.enabled
-   ? (enabled?'Comutarea ON/OFF se publică imediat în baza de date.':'Comutator disponibil după autentificare.')
-   : 'Comutatorul pregătește fișierul site-status.json. Încarcă-l pe GitHub și confirmă modificările pentru efect online.';
+ const ok=!!(enabled && cloud && cloud.enabled);
+ isEditorAuthenticated=ok;
+ $('admin-layout').hidden=!ok;
+ $('login-gate').hidden=ok;
+ $('logout-button').hidden=!ok;
+ $('login-form').hidden=!cloud.enabled;
+ $('security-setup').hidden=!!cloud.enabled;
+ $('publish-online').disabled=!ok;
+ $('publish-online').textContent='Publică online acum';
+ $('maintenance-toggle').disabled=!ok;
+ $('save-maintenance-message').disabled=!ok;
+ $('github-manual-control').hidden=true;
+ $('reload-public').disabled=!ok;
+ $('online-status').textContent=ok
+   ? 'Cont autorizat. Publicarea se salvează prin Supabase, conform regulilor de acces.'
+   : 'Acces de administrare indisponibil fără autentificare și autorizare.';
+ $('maintenance-help').textContent=ok
+   ? 'Schimbările ON/OFF sunt salvate numai prin cont autorizat.'
+   : 'Comutatorul este blocat până la autentificare.';
 }
 async function readPublished(ask=false){
+ if(!isEditorAuthenticated || !cloud.enabled) return;
  if(ask&&unpublishedChanges&&!confirm('Reîncarci datele online? Draftul local nepublicat va fi înlocuit. Descarcă întâi o copie JSON, dacă dorești să îl păstrezi.'))return;
  try{
    let content;
@@ -262,6 +269,7 @@ async function readPublished(ask=false){
 }
 $('reload-public').onclick=()=>readPublished(true);
 $('publish-online').onclick=async()=>{
+ if(!isEditorAuthenticated || !cloud.enabled){notify('Accesul de administrare necesită autentificare autorizată.');return;}
  if(!cloud.enabled){
    const output=structuredClone(data);
    output._status=$('mark-live').checked?'live':'preview';
@@ -300,6 +308,7 @@ $('publish-online').onclick=async()=>{
  finally{button.disabled=false;}
 };
 $('maintenance-toggle').addEventListener('change',async event=>{
+ if(!isEditorAuthenticated || !cloud.enabled){event.target.checked=!maintenanceEnabled;notify('Autentificare obligatorie pentru ON/OFF.');return;}
  const enabled=!event.target.checked;
  const previous=!maintenanceEnabled;
  if(enabled&&!confirm('Închizi acum afișarea site-ului pentru vizitatori? Panoul bibliotecarului va rămâne disponibil.')){
@@ -330,6 +339,7 @@ $('maintenance-toggle').addEventListener('change',async event=>{
  finally{toggle.disabled=false;}
 });
 $('save-maintenance-message').addEventListener('click',async()=>{
+ if(!isEditorAuthenticated || !cloud.enabled){notify('Autentificare obligatorie pentru publicare.');return;}
  if(!cloud.enabled){
    const message=$('maintenance-message-edit').value.trim().slice(0,500)||'Site-ul este temporar indisponibil pentru actualizări.';
    const state={maintenance:{enabled:maintenanceEnabled,message,updated_at:new Date().toISOString()},version:1};
@@ -353,6 +363,7 @@ $('save-maintenance-message').addEventListener('click',async()=>{
  finally{button.disabled=false;}
 });
 $('login-form').addEventListener('submit',async e=>{
+ if(!cloud.enabled){e.preventDefault();return;}
  e.preventDefault();const btn=$('login-button');btn.disabled=true;
  $('login-status').textContent='Se verifică autentificarea…';
  try {
@@ -370,7 +381,9 @@ $('login-form').addEventListener('submit',async e=>{
  finally{btn.disabled=false;}
 });
 $('logout-button').onclick=async()=>{
- if(unpublishedChanges&&!confirm('Există modificări nepublicate. Deconectarea le păstrează numai în acest browser. Continui?'))return;
+ if(unpublishedChanges&&!confirm('Există modificări nepublicate. Exportă-le înainte de deconectare; draftul local va fi șters. Continui?'))return;
+ try{localStorage.removeItem(DRAFT_KEY);}catch{}
+ unpublishedChanges=false;
  await cloud.logout();setAuthenticated(false);$('login-password').value='';
  data=normalizeContent({books:[],events:[],news:[],resources:[],gallery:[],rubrics:[]});renderCounters();render();
 };
@@ -381,7 +394,10 @@ $('draft-status').textContent='Draftul este păstrat în browser. Exportă perio
 if(cloud.enabled){
  cloud.authorized().then(async authorized=>{
    if(authorized){setAuthenticated(true);await readPublished(false);}
- }).catch(()=>{});
-}else if(!draftFromLocal){readPublished(false);}
+ }).catch(()=>{setAuthenticated(false);});
+}else{
+ $('security-setup').hidden=false;
+ $('login-form').hidden=true;
+}
 </script>
 </body></html>
