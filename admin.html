@@ -41,6 +41,16 @@ dialog{border:1px solid var(--line);border-radius:11px;padding:0;width:min(720px
 .poster-tools{border-top:1px solid var(--line);margin-top:16px;padding-top:14px;display:grid;gap:10px}
 .poster-preview{max-width:190px;max-height:220px;object-fit:contain;border:1px solid var(--line);border-radius:6px}
 .poster-tools input[type=file]{width:100%}
+
+/* Doar mascare vizuală: autorizarea se face exclusiv prin Supabase. */
+.email-mask-wrap{position:relative;margin-top:5px}
+.email-mask-wrap input{width:100%;min-height:43px;border:1px solid #96a99a;border-radius:6px;padding:10px;background:#fffefa}
+.email-cover{position:absolute;inset:0;background:#111916;color:#fff;display:flex;align-items:center;justify-content:center;border-radius:6px;letter-spacing:.08em;font-size:13px;font-weight:700;pointer-events:none}
+.pin-controls{display:flex;gap:9px;align-items:end;flex-wrap:wrap;margin-top:12px}
+.pin-controls label{margin:0;flex:1;min-width:145px}
+.pin-controls input{max-width:190px}
+.pin-controls .btn{flex:none}
+.privacy-note{font-size:12px;color:var(--muted);margin-top:8px}
 [hidden]{display:none!important}
 </style>
 <script src="./config.js"></script>
@@ -53,8 +63,18 @@ dialog{border:1px solid var(--line);border-radius:11px;padding:0;width:min(720px
  <p class="status" id="security-setup" role="status" hidden>Administrarea este blocată până la configurarea securizată a contului în Supabase. Site-ul cititorilor rămâne disponibil.</p>
  <p class="hint"><strong>Responsabilă de proiect, administrare și lansare:</strong> bibliotecar Dobrițoiu Sevastiana. Accesul este permis numai contului autorizat în baza de date.</p>
  <form id="login-form" hidden>
-  <label><span>Adresă e-mail</span><input id="login-email" type="email" autocomplete="username" required></label>
-  <label><span>Parolă</span><input id="login-password" type="password" autocomplete="current-password" required></label>
+  <label><span>Adresă e-mail</span></label>
+  <div class="email-mask-wrap">
+   <input id="login-email" type="email" autocomplete="username" aria-label="Adresa de e-mail a bibliotecii" readonly required>
+   <span class="email-cover" id="email-cover" aria-hidden="true">████████ · E-MAIL ACOPERIT · ████████</span>
+  </div>
+  <div class="pin-controls">
+   <label><span>PIN pentru afișarea adresei</span><input id="email-pin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••" aria-label="PIN ascuns"></label>
+   <button type="button" id="email-reveal" class="btn">Arată adresa</button>
+  </div>
+  <p class="status" id="pin-status" role="status" aria-live="polite"></p>
+  <p class="privacy-note">PIN-ul este pentru mascarea adresei, nu înlocuiește parola de autentificare Supabase.</p>
+  <label><span>Parolă Supabase</span><input id="login-password" type="password" autocomplete="current-password" required></label>
   <div class="actions"><button type="submit" id="login-button" class="btn primary">Conectează-te</button></div>
  </form>
  <p class="status" id="login-status" role="status"></p>
@@ -66,6 +86,8 @@ dialog{border:1px solid var(--line);border-radius:11px;padding:0;width:min(720px
 <button type="button" class="navbtn" data-tab="events">Evenimente <span class="count" id="n-events"></span></button>
 <button type="button" class="navbtn" data-tab="resources">Biblioteca electronică <span class="count" id="n-resources"></span></button>
 <button type="button" class="navbtn" data-tab="gallery">Galerie foto <span class="count" id="n-gallery"></span></button>
+<button type="button" class="navbtn" data-tab="media">🎬 Filmări și videoclipuri</button>
+<button type="button" class="navbtn" data-tab="live">🔴 Transmisiuni LIVE</button>
 <button type="button" class="navbtn" data-tab="rubrics">Alte rubrici <span class="count" id="n-rubrics"></span></button>
 <p class="label">Bibliotecă</p><button type="button" class="navbtn" data-tab="settings">Program și prezentare</button>
 <p class="label">Publicare</p><button type="button" class="navbtn" data-tab="publish">Salvare și publicare</button>
@@ -87,6 +109,37 @@ Doar persoanele cu drepturi în depozit pot publica schimbările. Nu există o c
 <section class="cards" aria-label="Situație"><div class="stat"><b id="stat-books">0</b><span>Titluri în catalog</span></div><div class="stat"><b id="stat-news">0</b><span>Noutăți</span></div><div class="stat"><b id="stat-events">0</b><span>Evenimente</span></div><div class="stat"><b id="stat-resources">0</b><span>Resurse electronice</span></div></section>
 <section class="panel" id="records-panel"><div class="panel-heading"><div><h2 id="section-heading">Fondul de carte</h2><p class="hint" id="section-description">Introduceți titlurile din biblioteca reală.</p></div><button type="button" class="btn primary" id="add-record">+ Adaugă</button></div>
 <div class="actions"><input type="search" id="search-records" placeholder="Caută în această secțiune" aria-label="Caută înregistrări" style="max-width:420px"><span class="small" id="record-count"></span></div><div id="records"></div></section>
+<section class="panel" id="media-panel" hidden>
+ <div class="panel-heading"><h2>🎬 Filmări și videoclipuri</h2><p class="hint">Din acest panou poți adăuga linkuri YouTube/Facebook sau filmări MP4/WebM de pe calculator.</p></div>
+ <form id="video-form" class="box-stack limit">
+   <label><span>Titlul filmării</span><input type="text" id="video-title" maxlength="160" required placeholder="Exemplu: Activitate culturală la bibliotecă"></label>
+   <label><span>Descriere (opțional)</span><textarea id="video-description" maxlength="1000" placeholder="Despre ce este filmarea și cine a realizat-o"></textarea></label>
+   <label><span>De unde adaugi videoclipul?</span>
+     <select id="video-kind"><option value="youtube">Link YouTube</option><option value="facebook">Link Facebook</option><option value="file">Filmarea mea din calculator (MP4/WebM)</option></select>
+   </label>
+   <label id="video-link-wrap"><span>Link către videoclip</span><input type="url" id="video-url" placeholder="https://www.youtube.com/watch?v=..."></label>
+   <label id="video-file-wrap" hidden><span>Alege filmarea de pe calculator (maxim 25 MB)</span>
+     <input id="video-file" type="file" accept="video/mp4,video/webm,.mp4,.webm" />
+   </label>
+   <div class="actions"><span class="small">Completează automat o probă:</span><button type="button" class="btn" id="video-demo-youtube">Probă YouTube</button><button type="button" class="btn" id="video-demo-facebook">Probă Facebook</button></div>
+   <p class="hint">Publică numai filmări pentru care ai dreptul de utilizare și acordul necesar al persoanelor filmate. Nu descărca și reîncărca filmele altor persoane: utilizează linkul original.</p>
+   <div class="actions"><button class="btn primary" id="video-add" type="submit">+ Adaugă filmarea</button><span id="video-feedback" class="small" role="status"></span></div>
+ </form>
+ <hr><h3>Filmări pregătite pentru publicare</h3><div id="video-list"></div>
+ <p class="notice">După adăugare, intră la <strong>Salvare și publicare</strong> și apasă <strong>Publică online acum</strong>. Atunci filmările vor apărea pe site-ul cititorilor la „Galerie și live”.</p>
+</section>
+<section class="panel" id="live-panel" hidden>
+ <div class="panel-heading"><h2>🔴 Transmisiuni LIVE</h2></div>
+ <p class="hint">O transmisiune LIVE este diferită de o filmare înregistrată. Introdu un link YouTube Live numai dacă evenimentul chiar este transmis în direct.</p>
+ <form id="live-form" class="box-stack limit">
+  <label><span>Titlul transmisiunii</span><input id="live-title" type="text" maxlength="160" placeholder="Exemplu: Lectură publică – transmisiune"></label>
+  <label><span>Link YouTube către transmisiune</span><input type="url" id="live-url" placeholder="https://www.youtube.com/watch?v=..."></label>
+  <label><span>Descriere</span><textarea id="live-description" maxlength="900"></textarea></label>
+  <label class="check"><input type="checkbox" id="live-enabled"><span>Afișează această transmisiune pe site-ul cititorilor</span></label>
+  <div class="actions"><button type="submit" class="btn primary">Salvează LIVE în draft</button><span id="live-feedback" class="small" role="status"></span></div>
+  <p class="notice">După salvare, mergi la „Salvare și publicare” și apasă „Publică online acum”. Pentru a opri afișarea, debifează caseta și publică din nou.</p>
+ </form>
+</section>
 <section class="panel" id="settings-panel" hidden><div class="panel-heading"><h2>Program și prezentare</h2><button type="button" class="btn primary" id="save-settings">Salvează</button></div>
 <div class="box-stack limit"><div><h3>Programul bibliotecii</h3><p class="hint">Bifează „Confirmat” numai după verificarea orarului.</p><label class="check"><input id="program-confirmed" type="checkbox"><span>Orarul este confirmat și poate fi afișat public.</span></label></div><div class="fieldgrid" id="program-fields"></div><label><span>Observații despre program</span><textarea id="program-notes" placeholder="De exemplu: program special în vacanță"></textarea></label><hr><div><h3>Despre bibliotecă</h3><p class="hint">Textele sunt afișate în secțiunea „Despre bibliotecă”.</p><label class="check"><input type="checkbox" id="info-confirmed"><span>Informațiile sunt verificate și pot fi publicate.</span></label></div><div id="info-fields" class="box-stack"></div><hr><div><h3>Recomandarea săptămânii</h3><p class="hint">O carte prezentată special pe pagina catalogului.</p></div><label><span>Titlu</span><input type="text" id="recommendation-title"></label><label><span>Autor</span><input type="text" id="recommendation-author"></label><label><span>Scurtă prezentare</span><textarea id="recommendation-summary"></textarea></label></div></section>
 <section class="panel" id="publish-panel" hidden><div class="panel-heading"><h2>Salvare, copie de siguranță și publicare</h2></div>
@@ -140,9 +193,9 @@ function notify(message){const m=$('message');m.textContent=message;m.hidden=fal
 function markSaved(){unpublishedChanges=true;try{localStorage.setItem(DRAFT_KEY,JSON.stringify(data));$('draft-status').textContent='✓ Draft salvat în acest browser. Publică online sau exportă o copie pentru siguranță.';}catch(err){$('draft-status').textContent='Nu s-a putut salva draftul în acest browser. Exportă datele JSON pentru a evita pierderea lor.';notify('Atenție: spațiul browserului este insuficient pentru draft.');}renderCounters();}
 function renderCounters(){for(const key of Object.keys(schemas)){const el=$('n-'+key);if(el)el.textContent=Array.isArray(data[key])?data[key].length:0;}for(const key of ['books','news','events','resources'])$('stat-'+key).textContent=(data[key]||[]).length.toLocaleString('ro');}
 function render(){for(const b of document.querySelectorAll('.navbtn')){b.classList.toggle('active',b.dataset.tab===active);b.setAttribute('aria-current',b.dataset.tab===active?'page':'false');}
- const records=!!schemas[active];$('records-panel').hidden=!records;$('book-extra').hidden=active!=='books';$('settings-panel').hidden=active!=='settings';$('publish-panel').hidden=active!=='publish';
+ const records=!!schemas[active];$('records-panel').hidden=!records;$('book-extra').hidden=active!=='books';$('settings-panel').hidden=active!=='settings';$('publish-panel').hidden=active!=='publish';$('media-panel').hidden=active!=='media';$('live-panel').hidden=active!=='live';
  if(records){$('section-heading').textContent=schemas[active].title;$('section-description').textContent=schemas[active].desc;$('search-records').value='';renderRecords();}
- if(active==='settings')populateSettings();}
+ if(active==='settings')populateSettings();if(active==='media')renderVideoList();if(active==='live')populateLiveForm();}
 function renderRecords(){const root=$('records');root.replaceChildren();const all=Array.isArray(data[active])?data[active]:[];const query=($('search-records').value||'').toLocaleLowerCase('ro');const shown=all.map((v,i)=>({v,i})).filter(({v})=>Object.values(v).some(val=>String(val).toLocaleLowerCase('ro').includes(query))).slice(0,150);
  $('record-count').textContent=`${all.filter(v=>Object.values(v).some(val=>String(val).toLocaleLowerCase('ro').includes(query))).length} rezultate`+(shown.length>=150?' · primele 150 afișate':'');
  if(!shown.length){root.append(h('p','muted','Nu există înregistrări în această secțiune.'));return;}
@@ -210,6 +263,8 @@ function normalizeContent(remote){
  const content={...remote};
  for(const key of Object.keys(schemas))if(!Array.isArray(content[key]))content[key]=[];
  content.program=content.program||{};content.public_info=content.public_info||{};
+ if(!content.video||typeof content.video!=='object')content.video={};
+ if(!content.live||typeof content.live!=='object')content.live={};
  return content;
 }
 function updateMaintenancePanel(value){
@@ -303,7 +358,7 @@ $('publish-online').onclick=async()=>{
    renderCounters();render();
    $('draft-status').textContent='✓ Toate modificările sunt publicate online.';
    $('publish-result').textContent='✓ Publicat! Versiunea '+publishedRevision+'. Cititorii primesc actualizarea automat.';
-   notify('Catalogul, evenimentele și afișele au fost publicate.');
+   notify('Catalogul, evenimentele, filmările și setările LIVE au fost publicate.');
  }catch(e){$('publish-result').textContent='Publicarea a eșuat: '+e.message;notify('Draftul rămâne salvat local.');}
  finally{button.disabled=false;}
 };
@@ -362,13 +417,137 @@ $('save-maintenance-message').addEventListener('click',async()=>{
  }catch(err){notify('Nu s-a putut actualiza mesajul: '+err.message);}
  finally{button.disabled=false;}
 });
+// Filmări, linkuri externe și LIVE - toate rămân sub același cont autorizat.
+function mediaEntries() {
+  if (!data.video || typeof data.video !== 'object' || Array.isArray(data.video)) data.video = {};
+  if (!Array.isArray(data.video.items)) data.video.items=[];
+  return data.video.items;
+}
+function parseYouTubeId(url) {
+ try {
+  const u=new URL(url),host=u.hostname.toLowerCase().replace(/^www\./,'');
+  let id='';
+  if(host==='youtu.be') id=u.pathname.split('/')[1]||'';
+  else if(host==='youtube.com'||host==='m.youtube.com'||host==='youtube-nocookie.com')
+    id=u.pathname==='/watch'?u.searchParams.get('v'):(u.pathname.match(/^\/(?:shorts|live|embed)\/([^/?#]+)/)||[])[1];
+  return /^[A-Za-z0-9_-]{11}$/.test(id||'')?id:'';
+ }catch{return '';}
+}
+function normalizeFacebook(url) {
+ try {
+  const u=new URL(url),host=u.hostname.toLowerCase();
+  if(u.protocol!=='https:' || !['facebook.com','www.facebook.com','m.facebook.com','fb.watch'].includes(host)) return '';
+  if(!u.pathname || u.pathname==='/')return '';
+  u.hash='';return u.href;
+ }catch{return '';}
+}
+function updateVideoFields() {
+ const kind=$('video-kind').value;
+ $('video-link-wrap').hidden=kind==='file'; $('video-file-wrap').hidden=kind!=='file';
+ $('video-url').required=kind!=='file'; $('video-file').required=kind==='file';
+ $('video-url').placeholder=kind==='facebook'?'https://www.facebook.com/reel/...':'https://www.youtube.com/watch?v=...';
+}
+$('video-kind').addEventListener('change',updateVideoFields);updateVideoFields();
+$('video-demo-youtube').onclick=()=>{$('video-kind').value='youtube';updateVideoFields();$('video-title').value='Videoclip de test – YouTube';$('video-description').value='Exemplu de înregistrare de verificat înainte de publicarea oficială.';$('video-url').value='https://www.youtube.com/watch?v=s0eDHJrEPc8';$('video-feedback').textContent='Apasă „Adaugă filmarea”, apoi „Publică online acum”.';};
+$('video-demo-facebook').onclick=()=>{$('video-kind').value='facebook';updateVideoFields();$('video-title').value='Videoclip de test – Facebook';$('video-description').value='Exemplu de înregistrare de verificat înainte de publicarea oficială.';$('video-url').value='https://www.facebook.com/reel/28507052058981812';$('video-feedback').textContent='Apasă „Adaugă filmarea”, apoi „Publică online acum”.';};
+
+function renderVideoList() {
+ const root=$('video-list');root.replaceChildren();
+ const items=mediaEntries();
+ if(!items.length){root.append(h('p','muted','Nu ai încă filmări adăugate.'));return;}
+ items.forEach((item,i)=>{
+  const entry=h('div','record'),details=h('div','record-info');
+  details.append(h('div','record-title',item.title || 'Fără titlu'));
+  details.append(h('div','record-details',({youtube:'YouTube',facebook:'Facebook',file:'Filmarea încărcată'}[item.kind]||item.kind||'Filmare')+' · '+(item.description||'')));
+  const tools=h('div','actions');
+  if(item.url){const l=h('a','btn','Deschide filmarea ↗');l.href=item.url;l.target='_blank';l.rel='noopener noreferrer';tools.append(l);}
+  const del=h('button','btn danger','Elimină din listă');del.type='button';del.onclick=()=>{
+    if(!confirm('Elimini filmarea din lista publicabilă? Fișierele încărcate anterior nu se șterg automat din spațiul de stocare.'))return;
+    mediaEntries().splice(i,1);markSaved();renderVideoList();notify('Filmarea a fost eliminată din draft. Publică online modificarea.');
+  };tools.append(del);entry.append(details,tools);root.append(entry);
+ });
+}
+$('video-form').addEventListener('submit',async e=>{
+ e.preventDefault();if(!cloud.enabled||!cloud.hasSession)return notify('Autentifică-te în Supabase pentru a adăuga filmări.');
+ const title=$('video-title').value.trim(),description=$('video-description').value.trim(),kind=$('video-kind').value;
+ if(!title)return notify('Completează titlul.');
+ const button=$('video-add');button.disabled=true;
+ try {
+  let url='', storage_path='';
+  if(kind==='youtube'){
+    const id=parseYouTubeId($('video-url').value.trim());
+    if(!id)throw Error('Introdu un link YouTube valid, cu identificator de 11 caractere.');
+    url='https://www.youtube.com/watch?v='+id;
+  } else if(kind==='facebook'){
+    url=normalizeFacebook($('video-url').value.trim());
+    if(!url)throw Error('Introdu un link public Facebook sau fb.watch valid (https://).');
+  } else if(kind==='file'){
+    const file=$('video-file').files?.[0];if(!file)throw Error('Apasă „Alege filmarea”.');
+    if(!['video/mp4','video/webm'].includes(file.type))throw Error('Sunt permise numai MP4/WebM.');
+    if(file.size>25*1024*1024)throw Error('Fișier prea mare: maxim 25 MB. Pentru filmări lungi folosește YouTube.');
+    $('video-feedback').textContent='Se încarcă filmarea…';
+    const uploaded=await cloud.uploadVideo(file);url=uploaded.url;storage_path=uploaded.path;
+  }
+  mediaEntries().unshift({id:crypto.randomUUID(),kind,title,description,url,storage_path,created_at:new Date().toISOString()});
+  markSaved();renderVideoList();$('video-form').reset();updateVideoFields();
+  $('video-feedback').textContent='Filmare adăugată în draft. Mai trebuie apăsat „Publică online acum”.';
+ }catch(err){$('video-feedback').textContent='Nu s-a salvat: '+err.message;notify(err.message);}
+ finally{button.disabled=false;}
+});
+function populateLiveForm() {
+ const v=data.live&&typeof data.live==='object'&&!Array.isArray(data.live)?data.live:{};
+ $('live-title').value=v.title||'';
+ $('live-description').value=v.description||'';
+ $('live-url').value=/^[A-Za-z0-9_-]{11}$/.test(v.youtube||'')?'https://www.youtube.com/watch?v='+v.youtube:'';
+ $('live-enabled').checked=v.enabled!==false && !!v.youtube;
+}
+$('live-form').addEventListener('submit',e=>{
+ e.preventDefault();if(!cloud.enabled||!cloud.hasSession)return notify('Autentifică-te înainte de salvare.');
+ const raw=$('live-url').value.trim(),id=raw?parseYouTubeId(raw):'';
+ if(raw&&!id){$('live-feedback').textContent='Link YouTube invalid.';return;}
+ if($('live-enabled').checked&&!id){$('live-feedback').textContent='Pentru a afișa LIVE trebuie să introduci linkul.';return;}
+ data.live={...(data.live||{}),title:$('live-title').value.trim()||'Transmisiune LIVE',description:$('live-description').value.trim(),youtube:id,enabled:$('live-enabled').checked};
+ markSaved();$('live-feedback').textContent='Setările LIVE sunt în draft. Apasă „Publică online acum”.';notify('Setări LIVE salvate în draft.');
+});
+
+
+// PIN pentru afișarea adresei: doar confidențialitate vizuală, NU control de acces.
+const emailCipher={salt:'+Ow0SsOE6cWt6q0nNqVU5w==',iv:'LYxP6TdNm1EH/qWK',data:'YBS3Zeiky4vZQ03MXEp4PeP7l5emstBv35xQr5nIO0KJ7bNqHgERffZugKUi'};
+const toBytes=(value)=>Uint8Array.from(atob(value),char=>char.charCodeAt(0));
+function maskEmail(){
+  $('login-email').value='';$('login-email').readOnly=true;
+  $('email-cover').hidden=false;$('email-pin').value='';
+  $('email-reveal').textContent='Arată adresa';
+  $('pin-status').textContent='';
+}
+$('email-reveal').addEventListener('click',async()=>{
+  if($('email-cover').hidden){maskEmail();return;}
+  const pin=$('email-pin').value.trim();
+  if(!/^\d{4}$/.test(pin)){$('pin-status').textContent='Introdu PIN-ul format din 4 cifre.';return;}
+  const btn=$('email-reveal');btn.disabled=true;$('pin-status').textContent='Se verifică PIN-ul…';
+  try{
+    if(!crypto?.subtle)throw Error('Browserul nu permite decriptarea locală. Deschide site-ul prin HTTPS.');
+    const keyMaterial=await crypto.subtle.importKey('raw',new TextEncoder().encode(pin),'PBKDF2',false,['deriveKey']);
+    const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:toBytes(emailCipher.salt),iterations:220000,hash:'SHA-256'},keyMaterial,{name:'AES-GCM',length:256},false,['decrypt']);
+    const decrypted=await crypto.subtle.decrypt({name:'AES-GCM',iv:toBytes(emailCipher.iv)},key,toBytes(emailCipher.data));
+    const email=new TextDecoder().decode(decrypted);
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))throw Error('E-mail invalid.');
+    $('login-email').value=email;$('login-email').readOnly=false;$('email-cover').hidden=true;
+    $('email-pin').value='';btn.textContent='Acoperă adresa';
+    $('pin-status').textContent='Adresa este afișată. Poți introduce parola Supabase.';
+  }catch(err){$('email-pin').value='';$('pin-status').textContent='PIN incorect sau indisponibil. Încearcă din nou.';}
+  finally{btn.disabled=false;}
+});
+$('email-pin').addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();$('email-reveal').click();}});
 $('login-form').addEventListener('submit',async e=>{
  if(!cloud.enabled){e.preventDefault();return;}
- e.preventDefault();const btn=$('login-button');btn.disabled=true;
+ e.preventDefault();
+ if(!$('email-cover').hidden){$('login-status').textContent='Mai întâi introdu PIN-ul și apasă „Arată adresa”.';return;}
+ const btn=$('login-button');btn.disabled=true;
  $('login-status').textContent='Se verifică autentificarea…';
  try {
    await cloud.login($('login-email').value.trim(),$('login-password').value);
-   $('login-password').value='';
+   $('login-password').value='';maskEmail();
    const draft=localStorage.getItem(DRAFT_KEY);
    setAuthenticated(true);
    await readPublished(false);
@@ -384,7 +563,7 @@ $('logout-button').onclick=async()=>{
  if(unpublishedChanges&&!confirm('Există modificări nepublicate. Exportă-le înainte de deconectare; draftul local va fi șters. Continui?'))return;
  try{localStorage.removeItem(DRAFT_KEY);}catch{}
  unpublishedChanges=false;
- await cloud.logout();setAuthenticated(false);$('login-password').value='';
+ await cloud.logout();setAuthenticated(false);$('login-password').value='';maskEmail();
  data=normalizeContent({books:[],events:[],news:[],resources:[],gallery:[],rubrics:[]});renderCounters();render();
 };
 initSettings();renderCounters();render();

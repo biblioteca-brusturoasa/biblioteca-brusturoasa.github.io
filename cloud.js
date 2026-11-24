@@ -108,7 +108,21 @@
     });
     return url + '/storage/v1/object/public/event-posters/' + path;
   }
-  window.LibraryCloud = Object.freeze({enabled, read, login, logout, authorized, publish, uploadPoster,
+
+  async function uploadVideo(file) {
+    if (!file || !['video/mp4','video/webm'].includes(file.type))
+      throw Error('Selectați o filmare MP4 sau WebM.');
+    if (file.size > 25 * 1024 * 1024) throw Error('Filmarea depășește 25 MB. Publicați întâi pe YouTube și folosiți linkul.');
+    if (file.size === 0) throw Error('Fișierul este gol.');
+    const ext = file.type === 'video/webm' ? 'webm' : 'mp4';
+    const path = crypto.randomUUID() + '.' + ext;
+    await authed('/storage/v1/object/library-videos/' + path, {
+      method: 'POST', headers: {'Content-Type': file.type, 'x-upsert':'false'}, body:file
+    });
+    return {path, url:url + '/storage/v1/object/public/library-videos/' + path};
+  }
+
+  window.LibraryCloud = Object.freeze({enabled, read, login, logout, authorized, publish, uploadPoster, uploadVideo,
     get email() { return session?.user?.email || ''; },
     get hasSession() { return !!session?.access_token; },
     get url() { return url; }
