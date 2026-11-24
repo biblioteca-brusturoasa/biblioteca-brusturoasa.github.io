@@ -52,6 +52,8 @@ dialog{border:1px solid var(--line);border-radius:11px;padding:0;width:min(720px
 .pin-controls .btn{flex:none}
 .privacy-note{font-size:12px;color:var(--muted);margin-top:8px}
 [hidden]{display:none!important}
+
+@media(max-width:650px){.modal-actions{flex-wrap:wrap}.modal-actions button{max-width:100%;white-space:normal}}
 </style>
 <script src="./config.js"></script>
 <script src="./cloud.js"></script>
@@ -143,7 +145,7 @@ Doar persoanele cu drepturi în depozit pot publica schimbările. Nu există o c
 <section class="panel" id="settings-panel" hidden><div class="panel-heading"><h2>Program și prezentare</h2><button type="button" class="btn primary" id="save-settings">Salvează</button></div>
 <div class="box-stack limit"><div><h3>Programul bibliotecii</h3><p class="hint">Bifează „Confirmat” numai după verificarea orarului.</p><label class="check"><input id="program-confirmed" type="checkbox"><span>Orarul este confirmat și poate fi afișat public.</span></label></div><div class="fieldgrid" id="program-fields"></div><label><span>Observații despre program</span><textarea id="program-notes" placeholder="De exemplu: program special în vacanță"></textarea></label><hr><div><h3>Despre bibliotecă</h3><p class="hint">Textele sunt afișate în secțiunea „Despre bibliotecă”.</p><label class="check"><input type="checkbox" id="info-confirmed"><span>Informațiile sunt verificate și pot fi publicate.</span></label></div><div id="info-fields" class="box-stack"></div><hr><div><h3>Recomandarea săptămânii</h3><p class="hint">O carte prezentată special pe pagina catalogului.</p></div><label><span>Titlu</span><input type="text" id="recommendation-title"></label><label><span>Autor</span><input type="text" id="recommendation-author"></label><label><span>Scurtă prezentare</span><textarea id="recommendation-summary"></textarea></label></div></section>
 <section class="panel" id="publish-panel" hidden><div class="panel-heading"><h2>Salvare, copie de siguranță și publicare</h2></div>
-<div class="box-stack"><div class="notice">Modificările se păstrează într-un <b>draft local</b>. În modul GitHub Pages, descarcă biblioteca-data.json și încarcă-l în depozit, cu Commit changes. Dacă Supabase este configurat, publicarea se face direct după autentificare.</div>
+<div class="box-stack"><div class="notice" id="recovery-notice">Anunțurile nepublicate se restaurează automat din copia păstrată în acest browser. Folosiți „Publică online acum” când sunteți pregătit.</div><div class="actions"><button class="btn" id="restore-backup" type="button">Recuperează o versiune anterioară</button><span id="recovery-result" class="small" role="status"></span></div><div class="notice">Modificările se păstrează într-un <b>draft local</b>. În modul GitHub Pages, descarcă biblioteca-data.json și încarcă-l în depozit, cu Commit changes. Dacă Supabase este configurat, publicarea se face direct după autentificare.</div>
 <div><h3>1. Copie de siguranță</h3><p class="hint">Descarcă toate cărțile, anunțurile și setările într-un fișier JSON.</p><div class="actions"><button class="btn primary" type="button" id="export-json">Descarcă datele JSON</button><label class="btn" for="import-json" style="cursor:pointer">Încarcă date dintr-o copie JSON</label><input type="file" id="import-json" accept=".json,application/json" hidden></div></div>
 <hr><div><h3>2. Importul fondului de carte din Excel</h3><p class="hint">În Excel, salvează tabelul ca <b>CSV UTF-8</b>. Coloane acceptate: Titlu, Autor, Domeniu/Gen, Editura, An, ISBN, Exemplare, Cota. Înregistrările noi se adaugă fără a dubla automat cărțile deja existente.</p><div class="actions"><label class="btn" for="import-csv" style="cursor:pointer">Importă catalog CSV</label><input id="import-csv" type="file" accept=".csv,text/csv" hidden></div></div>
 <hr><div><h3>3. Publicare sincronizată</h3>
@@ -163,13 +165,14 @@ Doar persoanele cu drepturi în depozit pot publica schimbările. Nu există o c
  <label><span>Descrierea afișului pentru accesibilitate</span><input id="poster-alt" type="text" maxlength="180" placeholder="De exemplu: afișul atelierului de lectură"></label>
  <label class="check"><input type="checkbox" id="poster-remove"><span>Elimină afișul de la acest eveniment</span></label>
  <p class="hint">Afișele sunt comprimate automat. Publică numai imagini pentru care biblioteca are drepturi și permisiunea persoanelor fotografiate, dacă este cazul.</p>
- </div><div class="modal-actions"><button type="button" class="btn" id="cancel-dialog">Anulează</button><button type="submit" class="btn primary">Salvează înregistrarea</button></div></form></dialog>
+ </div><div class="modal-actions"><button type="button" class="btn" id="cancel-dialog">Anulează</button><button type="submit" class="btn">Salvează fără publicare</button><button type="submit" class="btn primary" id="save-and-publish" data-publish="yes">Salvează și publică online</button></div></form></dialog>
 <div id="message" hidden role="status"></div>
 <script type="application/json" id="initial-data">{"_status": "preview", "books": [], "news": [], "events": [], "resources": [], "recommendation": {}, "program": {}, "public_info": {}, "video": {}, "live": {}, "logo": "", "rubrics": [], "gallery": []}</script>
 <script>
 'use strict';
 const $ = id => document.getElementById(id);
 const DRAFT_KEY = 'biblioteca-brusturoasa-draft-v4';
+const BACKUPS_KEY = DRAFT_KEY + '-backups';
 const cloud = window.LibraryCloud;
 let publishedRevision = null, unpublishedChanges = false, maintenanceEnabled = false;
 const schemas = {
@@ -190,7 +193,44 @@ let isEditorAuthenticated=false;
 let active='books', editing=-1, noticeTimer;
 function h(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=String(txt);return e;}
 function notify(message){const m=$('message');m.textContent=message;m.hidden=false;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>m.hidden=true,4500);}
-function markSaved(){unpublishedChanges=true;try{localStorage.setItem(DRAFT_KEY,JSON.stringify(data));$('draft-status').textContent='✓ Draft salvat în acest browser. Publică online sau exportă o copie pentru siguranță.';}catch(err){$('draft-status').textContent='Nu s-a putut salva draftul în acest browser. Exportă datele JSON pentru a evita pierderea lor.';notify('Atenție: spațiul browserului este insuficient pentru draft.');}renderCounters();}
+function snapshotBackup(){
+ try {
+   const previous=localStorage.getItem(DRAFT_KEY);
+   if(!previous)return;
+   const saved=JSON.parse(localStorage.getItem(BACKUPS_KEY)||'[]');
+   if(saved[0]?.content!==previous){saved.unshift({at:new Date().toISOString(),content:previous});localStorage.setItem(BACKUPS_KEY,JSON.stringify(saved.slice(0,5)));}
+ }catch(err){console.warn('Copie de recuperare indisponibilă',err);}
+}
+function persistDraft(){
+ try{localStorage.setItem(DRAFT_KEY,JSON.stringify(data));return true;}
+ catch(err){$('draft-status').textContent='⚠ Salvarea locală a eșuat. Descărcați o copie JSON.';notify('Nu s-a putut salva draftul!');return false;}
+}
+function markSaved(){unpublishedChanges=true;snapshotBackup();const ok=persistDraft();if(ok)$('draft-status').textContent='✓ Modificările sunt salvate automat în acest browser. Nu sunt încă publicate.';renderCounters();return ok;}
+function restoreDraftIfPresent(){
+ try {
+   const local=localStorage.getItem(DRAFT_KEY);
+   if(!local)return false;
+   const restored=normalizeContent(JSON.parse(local));
+   data=restored;unpublishedChanges=true;
+   $('mark-live').checked=data._status==='live';
+   renderCounters();render();
+   $('draft-status').textContent='✓ Anunțurile nepublicate au fost recuperate automat din acest browser.';
+   $('recovery-result').textContent='Draft recuperat; nu s-a publicat nimic.';
+   return true;
+ }catch(err){$('draft-status').textContent='Există un draft local care nu poate fi citit. Nu îl ștergeți.';return false;}
+}
+$('restore-backup').onclick=()=>{
+ try{
+   const saved=JSON.parse(localStorage.getItem(BACKUPS_KEY)||'[]');
+   if(!saved.length){$('recovery-result').textContent='Nu există versiuni anterioare în acest browser.';return;}
+   const latest=saved[0];
+   if(!confirm('Recuperați copia din '+new Date(latest.at).toLocaleString('ro-RO')+'? Versiunea curentă va fi păstrată ca rezervă.'))return;
+   snapshotBackup();
+   data=normalizeContent(JSON.parse(latest.content));
+   if(!markSaved())return;
+   render();$('recovery-result').textContent='Versiunea anterioară a fost recuperată. Apăsați Publică online pentru a o publica.';
+ }catch(err){$('recovery-result').textContent='Copia nu poate fi recuperată: '+err.message;}
+};
 function renderCounters(){for(const key of Object.keys(schemas)){const el=$('n-'+key);if(el)el.textContent=Array.isArray(data[key])?data[key].length:0;}for(const key of ['books','news','events','resources'])$('stat-'+key).textContent=(data[key]||[]).length.toLocaleString('ro');}
 function render(){for(const b of document.querySelectorAll('.navbtn')){b.classList.toggle('active',b.dataset.tab===active);b.setAttribute('aria-current',b.dataset.tab===active?'page':'false');}
  const records=!!schemas[active];$('records-panel').hidden=!records;$('book-extra').hidden=active!=='books';$('settings-panel').hidden=active!=='settings';$('publish-panel').hidden=active!=='publish';$('media-panel').hidden=active!=='media';$('live-panel').hidden=active!=='live';
@@ -222,7 +262,7 @@ $('edit-form').addEventListener('submit',async e=>{e.preventDefault();const form
  if(['events','resources','rubrics'].includes(active)&&!obj.id)obj.id='item-'+Math.random().toString(36).slice(2,10);
  if(active==='gallery'&&!obj.kind)obj.kind='photo';
  if(editing<0)data[active].unshift(obj);else data[active][editing]=obj;
- markSaved();$('edit-dialog').close();renderRecords();notify('Înregistrare salvată în draft.');});
+ const shouldPublish=e.submitter?.dataset.publish==='yes';if(!markSaved())return;$('edit-dialog').close();renderRecords();if(shouldPublish){active='publish';render();$('publish-online').click();}else notify('Înregistrarea a fost salvată. O puteți publica mai târziu.');});
 $('close-dialog').onclick=$('cancel-dialog').onclick=()=>$('edit-dialog').close();$('add-record').onclick=()=>openRecord(-1);$('search-records').addEventListener('input',renderRecords);
 for(const b of document.querySelectorAll('.navbtn'))b.addEventListener('click',()=>{active=b.dataset.tab;render();window.scrollTo({top:0,behavior:'smooth'});});$('go-import').onclick=()=>{active='publish';render();};
 function initSettings(){for(const [key,label] of Object.entries(days))$('program-fields').append(formField([key,label,'text'],' '));for(const [key,label]of Object.entries(info))$('info-fields').append(formField([key,label,'textarea'],' '));}
@@ -313,14 +353,15 @@ async function readPublished(ask=false){
    }
    data=normalizeContent(content);
    unpublishedChanges=false;
-   if(ask)try{localStorage.removeItem(DRAFT_KEY);}catch{}
+   if(ask){snapshotBackup();try{localStorage.removeItem(DRAFT_KEY);}catch{}}
    $('mark-live').checked=data._status==='live';
    updateMaintenancePanel(data.maintenance);
    renderCounters();render();
    $('draft-status').textContent=cloud.enabled?'✓ Datele publicate au fost încărcate.':'✓ Fișierele publicate au fost citite de pe GitHub Pages.';
    $('publish-result').textContent=cloud.enabled?'Versiunea online: '+publishedRevision:'';
+   if(!ask)restoreDraftIfPresent();
    if(ask)notify('Informațiile publicate au fost reîncărcate.');
- }catch(e){$('publish-result').textContent='Nu s-au putut încărca datele: '+e.message;notify('Eroare la citirea conținutului: '+e.message);}
+ }catch(e){restoreDraftIfPresent();$('publish-result').textContent='Nu s-au putut încărca datele online: '+e.message;notify('Conexiunea online nu răspunde. Draftul local rămâne disponibil.');}
 }
 $('reload-public').onclick=()=>readPublished(true);
 $('publish-online').onclick=async()=>{
@@ -353,7 +394,7 @@ $('publish-online').onclick=async()=>{
    output._status=$('mark-live').checked?'live':'preview';
    const result=await cloud.publish(output,publishedRevision);
    data=output;publishedRevision=result.revision;unpublishedChanges=false;
-   try{localStorage.removeItem(DRAFT_KEY);}catch{}
+   snapshotBackup();try{localStorage.removeItem(DRAFT_KEY);}catch{}
    updateMaintenancePanel(output.maintenance);
    renderCounters();render();
    $('draft-status').textContent='✓ Toate modificările sunt publicate online.';
@@ -548,20 +589,15 @@ $('login-form').addEventListener('submit',async e=>{
  try {
    await cloud.login($('login-email').value.trim(),$('login-password').value);
    $('login-password').value='';maskEmail();
-   const draft=localStorage.getItem(DRAFT_KEY);
    setAuthenticated(true);
-   await readPublished(false);
-   // Dacă există un draft salvat de bibliotecar, nu îl suprascriem automat:
-   if(draft&&confirm('Există un draft nepublicat în acest browser. Îl restaurezi peste datele online încărcate?')){
-     try{data=normalizeContent(JSON.parse(draft));unpublishedChanges=true;renderCounters();render();markSaved();}catch{}
-   }
+   await readPublished(false); // readPublished restaurează automat draftul, fără dialoguri.
    $('login-status').textContent='';
  }catch(err){$('login-status').textContent=err.message;}
  finally{btn.disabled=false;}
 });
 $('logout-button').onclick=async()=>{
- if(unpublishedChanges&&!confirm('Există modificări nepublicate. Exportă-le înainte de deconectare; draftul local va fi șters. Continui?'))return;
- try{localStorage.removeItem(DRAFT_KEY);}catch{}
+ if(unpublishedChanges&&!confirm('Există modificări nepublicate. Ele vor rămâne salvate în acest browser după deconectare. Continuați?'))return;
+ // Nu ștergem draftul la deconectare.
  unpublishedChanges=false;
  await cloud.logout();setAuthenticated(false);$('login-password').value='';maskEmail();
  data=normalizeContent({books:[],events:[],news:[],resources:[],gallery:[],rubrics:[]});renderCounters();render();
@@ -569,7 +605,7 @@ $('logout-button').onclick=async()=>{
 initSettings();renderCounters();render();
 setAuthenticated(false);
 updateMaintenancePanel({enabled:false});
-$('draft-status').textContent='Draftul este păstrat în browser. Exportă periodic o copie JSON.';
+$('draft-status').textContent='Modificările nepublicate sunt păstrate automat în acest browser.';
 if(cloud.enabled){
  cloud.authorized().then(async authorized=>{
    if(authorized){setAuthenticated(true);await readPublished(false);}
