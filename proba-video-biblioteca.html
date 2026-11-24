@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <meta name="description" content="Probă de redare pentru două înregistrări video furnizate de bibliotecă: YouTube și Facebook.">
+  <title>Probă VIDEO · Biblioteca „Păstorel Teodoreanu” · Brusturoasa</title>
+  <style>
+    :root { --verde:#193b30; --crem:#f8f6f0; --auriu:#e1c787; --text:#243d34; }
+    * {box-sizing:border-box}
+    body {margin:0; font: 16px/1.58 system-ui,-apple-system,'Segoe UI',Arial,sans-serif; color:var(--text);background:var(--crem)}
+    header {background:var(--verde);color:white;padding:26px 20px;border-bottom:5px solid var(--auriu)}
+    .wrap {max-width:960px;margin:auto}
+    header p {font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:#e9dbb6;margin:0 0 6px;font-weight:700}
+    h1 {font:700 clamp(1.55rem,5vw,2.5rem)/1.15 Georgia,serif;margin:0}
+    h2 {font:700 1.5rem/1.3 Georgia,serif;margin:0 0 10px}
+    main {max-width:960px;margin:auto;padding:30px 20px 55px}
+    .intro {margin:0 0 24px}
+    .card {background:white;border:1px solid #d7dfd9;border-radius:14px;padding:clamp(20px,4vw,30px);margin-bottom:22px;box-shadow:0 10px 30px rgba(20,40,32,.04)}
+    .tag {font-size:.8rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#526a60;margin:0 0 8px}
+    .player {display:grid;place-items:center;background:#112b23; color:white;min-height:175px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;margin:20px 0 14px}
+    .player.facebook {aspect-ratio: 4/3;max-height:600px}
+    iframe {display:block;width:100%;height:100%;border:0;background:white}
+    button,.btn {display:inline-block;border:0;border-radius:8px;padding:12px 18px;font:700 1rem system-ui,sans-serif;cursor:pointer;text-align:center;text-decoration:none;background:var(--auriu);color:#1c382e}
+    button:hover,.btn:hover {background:#f2deaa}
+    a {color:#136348;overflow-wrap:anywhere}
+    :focus-visible {outline:3px solid #c27b1b;outline-offset:4px}
+    .fallback {margin:14px 0 2px;font-size:.94rem}
+    footer {font-size:.88rem;color:#53685e;margin-top:20px}
+  </style>
+</head>
+<body>
+  <header><div class="wrap"><p>Biblioteca Comunală „Păstorel Teodoreanu” · Brusturoasa, județul Bacău</p><h1>Probă de redare VIDEO</h1></div></header>
+  <main>
+    <p class="intro">Două înregistrări selectate pentru verificarea afișării în site. Această pagină este o <strong>probă tehnică</strong>, nu o transmisie LIVE și nu modifică datele bibliotecii.</p>
+    <section class="card" aria-labelledby="yt-title">
+      <p class="tag">Înregistrarea 1 · YouTube</p>
+      <h2 id="yt-title">Videoclip YouTube – probă de redare</h2>
+      <p>Titlul și interpretul se vor completa după confirmarea informațiilor publicate de autor.</p>
+      <div id="youtube-player" class="player"><button type="button" id="play-youtube">▶ Redă videoclipul YouTube</button></div>
+      <p class="fallback">Dacă redarea este restricționată de YouTube, <a href="https://www.youtube.com/watch?v=s0eDHJrEPc8" target="_blank" rel="noopener noreferrer">deschide videoclipul pe YouTube</a>.</p>
+    </section>
+    <section class="card" aria-labelledby="fb-title">
+      <p class="tag">Înregistrarea 2 · Facebook Reel</p>
+      <h2 id="fb-title">Videoclip Facebook – probă de redare</h2>
+      <p>Vom încerca redarea în pagină. Facebook poate solicita conectarea sau poate bloca afișarea din alte site-uri.</p>
+      <div id="facebook-player" class="player facebook"><button type="button" id="play-facebook">▶ Încearcă redarea Facebook</button></div>
+      <p class="fallback">Dacă nu pornește în pagină, folosește varianta sigură: <a href="https://www.facebook.com/reel/28507052058981812" target="_blank" rel="noopener noreferrer">deschide videoclipul pe Facebook</a>.</p>
+    </section>
+    <p>Videoclipurile rămân la platformele originale; biblioteca nu le descarcă și nu le republică. Apăsarea butoanelor de redare poate permite platformelor respective să prelucreze date de vizitare.</p>
+    <p><a href="https://biblioteca-brusturoasa.github.io/">Înapoi la site-ul bibliotecii</a></p>
+    <footer>Biblioteca „Păstorel Teodoreanu” din Brusturoasa · pagină de test, neindexată separat de Google.</footer>
+  </main>
+  <script>
+    document.getElementById('play-youtube').addEventListener('click', function () {
+      const iframe=document.createElement('iframe');
+      iframe.src='https://www.youtube-nocookie.com/embed/s0eDHJrEPc8?autoplay=1';
+      iframe.title='Probă video YouTube'; iframe.loading='eager';
+      iframe.allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen';
+      iframe.allowFullscreen=true;
+      iframe.referrerPolicy='strict-origin-when-cross-origin';
+      document.getElementById('youtube-player').replaceChildren(iframe);
+    });
+    document.getElementById('play-facebook').addEventListener('click', function () {
+      const iframe=document.createElement('iframe');
+      iframe.src='https://www.facebook.com/plugins/video.php?href='+encodeURIComponent('https://www.facebook.com/reel/28507052058981812')+'&show_text=false&width=500';
+      iframe.title='Probă video Facebook'; iframe.loading='eager';
+      iframe.allow='autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share';
+      iframe.allowFullscreen=true;
+      iframe.referrerPolicy='strict-origin-when-cross-origin';
+      document.getElementById('facebook-player').replaceChildren(iframe);
+    });
+  </script>
+</body>
+</html>
