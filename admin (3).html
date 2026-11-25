@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Administrare · Biblioteca Păstorel Teodoreanu</title>
+<style>
+:root { --bg:#f7f5ee; --green:#1b3b31; --ink:#202e26; --muted:#5a685e; --line:#d7ded4; --accent:#a44330; --white:#fffefa; --soft:#e7ede2; }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:Georgia,serif;font-weight:500;line-height:1.16;margin:0;color:var(--green)}h1{font-size:clamp(27px,3vw,39px)}h2{font-size:27px}h3{font-size:20px}
+a{color:var(--green)}button,input,textarea,select{font:inherit}
+button{cursor:pointer}button:disabled{opacity:.5;cursor:wait}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #2b7364;outline-offset:2px}
+.top{background:var(--green);color:#fffdf5}.top-in{max-width:1300px;margin:auto;padding:18px 25px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.top strong{display:block;font:500 27px/1.1 Georgia,serif}.top small{color:#bde0c7;letter-spacing:.11em;font-size:10px;font-weight:800;text-transform:uppercase}.top a{color:#fff;border:1px solid #91ab96;border-radius:6px;padding:10px 13px;text-decoration:none}
+.layout{max-width:1300px;margin:0 auto;padding:24px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:24px}
+.sidebar{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px;align-self:start;position:sticky;top:12px}.sidebar .label{font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:750;letter-spacing:.11em;margin:12px 10px 7px}.navbtn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:11px 12px;border:0;background:transparent;border-radius:7px;color:var(--green);text-align:left;font-weight:650;margin:2px 0}.navbtn.active{background:var(--soft)}.navbtn:hover{background:#eef1e9}.count{color:var(--muted);font-size:12px}
+main{min-width:0}.intro{margin-bottom:18px}.intro p{margin:6px 0 0;color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.stat{border:1px solid var(--line);background:var(--white);padding:14px;border-radius:9px}.stat b{display:block;font:500 31px Georgia,serif;color:var(--green)}.stat span{font-size:13px;color:var(--muted)}
+.panel{border:1px solid var(--line);background:var(--white);border-radius:10px;padding:22px;margin-bottom:18px}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:15px}.hint{color:var(--muted);font-size:13px}.small{font-size:13px;color:var(--muted)}
+.btn{padding:9px 14px;border-radius:6px;border:1px solid #9dae9f;background:#fff;color:var(--green);font-weight:700;min-height:41px}.btn:hover{background:var(--soft)}.primary{background:var(--accent);border-color:var(--accent);color:#fff}.primary:hover{background:#843522}.danger{color:#932d27;border-color:#ecc4bd}.danger:hover{background:#fdf1ee}.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+input[type=text],input[type=url],input[type=date],input[type=number],input[type=password],input[type=search],textarea,select{width:100%;border:1px solid #96a99a;border-radius:6px;background:#fffefa;color:var(--ink);padding:10px;min-height:42px}textarea{min-height:108px;resize:vertical}label span{display:block;margin-bottom:5px;font-weight:700;color:var(--green)}label{display:block}.fieldgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.wide{grid-column:1/-1}
+.record{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-top:1px solid var(--line)}.record-title{font-weight:740}.record-details{color:var(--muted);font-size:13px;overflow-wrap:anywhere}.record-info{min-width:0}.record .btn{min-height:34px;padding:5px 10px;font-size:13px}.record-actions{flex-shrink:0}.muted{color:var(--muted)}.notice{padding:11px 13px;background:#eef1e9;border-radius:8px;border:1px solid #cfdfd2;margin:11px 0}.warn{background:#fff8ed;border-color:#f2dfb9}.status{font-size:13px;margin:12px 0;min-height:20px;color:#315c41;font-weight:650}
+hr{border:0;border-top:1px solid var(--line);margin:22px 0}.box-stack{display:grid;gap:14px}.limit{max-width:720px}.spread{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+input[type=file]{max-width:100%;font-size:13px}.check{display:flex;align-items:flex-start;gap:9px}.check input{width:18px;height:18px;margin-top:3px;flex:none}.check span{font-weight:400}
+dialog{border:1px solid var(--line);border-radius:11px;padding:0;width:min(720px,calc(100% - 26px));max-height:92vh;box-shadow:0 16px 75px #0005}dialog::backdrop{background:#101f17a9}.modal{padding:25px}.dialog-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:17px;gap:12px}.dialog-header button{font-size:20px}.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px;flex-wrap:wrap}
+#message{position:fixed;bottom:18px;right:18px;max-width:min(440px,calc(100% - 36px));background:var(--green);color:#fff;padding:14px 18px;border-radius:8px;box-shadow:0 10px 35px #0003;z-index:10;font-size:14px}
+@media(max-width:930px){.layout{grid-template-columns:1fr}.sidebar{position:static;display:flex;gap:6px;flex-wrap:wrap}.sidebar .label{width:100%;margin:5px}.navbtn{width:auto}.cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:620px){.layout{padding:14px}.panel{padding:16px}.fieldgrid{grid-template-columns:1fr}.wide{grid-column:auto}.record{align-items:flex-start;flex-direction:column}.top-in{padding:16px}.cards{gap:8px}}
+
+.login-gate{max-width:560px;margin:50px auto;padding:28px;background:var(--white);border:1px solid var(--line);border-radius:12px}
+.login-gate h2{margin-bottom:12px}.login-gate label{margin-top:13px}.login-gate .actions{margin-top:17px}
+#logout-button{background:transparent;color:#fff;border-color:#93aa99}
+.maintenance-panel{border-color:#b1cbb2;background:#f4f8f1}
+.maintenance-switch{display:flex;align-items:center;gap:12px;font-weight:700;color:var(--green);margin:14px 0}
+.maintenance-switch input{appearance:none;-webkit-appearance:none;width:55px;height:30px;background:#ad4939;border-radius:30px;position:relative;cursor:pointer;flex:none;border:1px solid #934032;transition:background .2s}
+.maintenance-switch input::after{content:"";position:absolute;left:3px;top:3px;height:22px;width:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0005;transition:transform .2s}
+.maintenance-switch input:checked{background:#26794d;border-color:#1d5c3d}
+.maintenance-switch input:checked::after{transform:translateX(25px)}
+.maintenance-switch input:disabled{opacity:.45;cursor:not-allowed}
+.maintenance-status{font-weight:800;color:#315b42}
+.maintenance-status.off{color:#983d2d}
+.poster-tools{border-top:1px solid var(--line);margin-top:16px;padding-top:14px;display:grid;gap:10px}
+.poster-preview{max-width:190px;max-height:220px;object-fit:contain;border:1px solid var(--line);border-radius:6px}
+.poster-tools input[type=file]{width:100%}
+
+/* Doar mascare vizuală: autorizarea se face exclusiv prin Supabase. */
+.email-mask-wrap{position:relative;margin-top:5px}
+.email-mask-wrap input{width:100%;min-height:43px;border:1px solid #96a99a;border-radius:6px;padding:10px;background:#fffefa}
+.email-cover{position:absolute;inset:0;background:#111916;color:#fff;display:flex;align-items:center;justify-content:center;border-radius:6px;letter-spacing:.08em;font-size:13px;font-weight:700;pointer-events:none}
+.pin-controls{display:flex;gap:9px;align-items:end;flex-wrap:wrap;margin-top:12px}
+.pin-controls label{margin:0;flex:1;min-width:145px}
+.pin-controls input{max-width:190px}
+.pin-controls .btn{flex:none}
+.privacy-note{font-size:12px;color:var(--muted);margin-top:8px}
+[hidden]{display:none!important}
+
+@media(max-width:650px){.modal-actions{flex-wrap:wrap}.modal-actions button{max-width:100%;white-space:normal}}
+</style>
+<script src="./config.js"></script>
+<script src="./cloud.js"></script>
+</head>
+<body>
+<header class="top"><div class="top-in"><div><small>Administrarea proiectului · Dobrițoiu Sevastiana</small><strong>Biblioteca „Păstorel Teodoreanu”</strong></div><div class="actions"><button id="logout-button" class="btn" type="button" hidden>Deconectare</button><a href="./index.html" target="_blank" rel="noopener">Deschide site-ul cititorilor ↗</a></div></div></header>
+<section class="login-gate" id="login-gate" aria-label="Conectare bibliotecar">
+ <h2>Autentificare bibliotecar</h2>
+ <p class="status" id="security-setup" role="status" hidden>Administrarea este blocată până la configurarea securizată a contului în Supabase. Site-ul cititorilor rămâne disponibil.</p>
+ <p class="hint"><strong>Responsabilă de proiect, administrare și lansare:</strong> bibliotecar Dobrițoiu Sevastiana. Accesul este permis numai contului autorizat în baza de date.</p>
+ <form id="login-form" hidden>
+  <label><span>Adresă e-mail</span></label>
+  <div class="email-mask-wrap">
+   <input id="login-email" type="email" autocomplete="username" aria-label="Adresa de e-mail a bibliotecii" readonly required>
+   <span class="email-cover" id="email-cover" aria-hidden="true">████████ · E-MAIL ACOPERIT · ████████</span>
+  </div>
+  <div class="pin-controls">
+   <label><span>PIN pentru afișarea adresei</span><input id="email-pin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••" aria-label="PIN ascuns"></label>
+   <button type="button" id="email-reveal" class="btn">Arată adresa</button>
+  </div>
+  <p class="status" id="pin-status" role="status" aria-live="polite"></p>
+  <p class="privacy-note">PIN-ul este pentru mascarea adresei, nu înlocuiește parola de autentificare Supabase.</p>
+  <label><span>Parolă Supabase</span><input id="login-password" type="password" autocomplete="current-password" required></label>
+  <div class="actions"><button type="submit" id="login-button" class="btn primary">Conectează-te</button></div>
+ </form>
+ <p class="status" id="login-status" role="status"></p>
+ <p class="hint">Contul este aprobat de instituție și se creează în Supabase. Nicio parolă nu este publicată în GitHub. Nu folosiți panoul pentru date personale ale cititorilor.</p>
+</section>
+<div class="layout" id="admin-layout" hidden><aside class="sidebar" id="sidebar" aria-label="Administrare"><p class="label">Conținut</p>
+<button type="button" class="navbtn active" data-tab="books">Fondul de carte <span class="count" id="n-books"></span></button>
+<button type="button" class="navbtn" data-tab="news">Noutăți <span class="count" id="n-news"></span></button>
+<button type="button" class="navbtn" data-tab="events">Evenimente <span class="count" id="n-events"></span></button>
+<button type="button" class="navbtn" data-tab="resources">Biblioteca electronică <span class="count" id="n-resources"></span></button>
+<button type="button" class="navbtn" data-tab="gallery">Galerie foto <span class="count" id="n-gallery"></span></button>
+<button type="button" class="navbtn" data-tab="media">🎬 Filmări și videoclipuri</button>
+<button type="button" class="navbtn" data-tab="live">🔴 Transmisiuni LIVE</button>
+<button type="button" class="navbtn" data-tab="rubrics">Alte rubrici <span class="count" id="n-rubrics"></span></button>
+<p class="label">Bibliotecă</p><button type="button" class="navbtn" data-tab="settings">Program și prezentare</button>
+<p class="label">Publicare</p><button type="button" class="navbtn" data-tab="publish">Salvare și publicare</button>
+</aside>
+<main><div class="intro"><h1>Administrarea bibliotecii</h1><p class="small"><strong>Inițiatoare și responsabilă de administrare și lansare:</strong> bibliotecar Dobrițoiu Sevastiana.</p><p>Adaugă anunțuri, filmări, fotografii, cărți, evenimente și alte informații. Modificările se păstrează într-un draft până când alegi „Publică online”.</p></div>
+<section class="panel" id="quick-news-panel" aria-label="Încărcare și publicare" style="border:2px solid #277955;background:#f6fff8">
+ <div class="panel-heading"><div><h2>Încarcă și publică</h2><p class="hint">Alege ce vrei să adaugi, completează și publică. Aceleași două comenzi pentru toate rubricile.</p></div></div>
+ <label style="max-width:460px"><span>Ce vrei să încarci?</span><select id="quick-type">
+ <option value="news">Anunț / noutate</option><option value="events">Eveniment / afiș</option>
+ <option value="media">Film / videoclip</option><option value="gallery">Fotografie</option>
+ <option value="books">Carte în catalog</option><option value="resources">Resursă electronică</option>
+ <option value="rubrics">Altă rubrică</option><option value="live">Transmisiune LIVE</option>
+ <option value="settings">Programul și prezentarea bibliotecii</option>
+ </select></label>
+ <div class="actions" style="gap:14px;flex-wrap:wrap;margin-top:14px">
+  <button type="button" class="btn primary" id="quick-upload">1. Încarcă / Modifică</button>
+  <button type="button" class="btn primary" id="quick-publish">2. Publică online</button>
+ </div>
+ <p class="small" id="quick-feedback" role="status" aria-live="polite">Alege tipul conținutului și apasă „Încarcă / Modifică”.</p>
+ <p class="hint">Datele se salvează ca draft până când apeși „Publică online”. Pentru filmări și setări, folosește butonul de adăugare/salvare din formular înainte de publicare.</p>
+</section>
+<section class="panel maintenance-panel" id="maintenance-panel">
+ <div class="panel-heading"><div><h2>Site cititori: ON / OFF</h2><p class="hint">Închide temporar afișarea publică pentru lucrări de mentenanță, fără să blochezi administrarea.</p></div><span class="maintenance-status" id="maintenance-status">Stare necunoscută</span></div>
+ <label class="maintenance-switch" for="maintenance-toggle"><input id="maintenance-toggle" type="checkbox" role="switch" disabled><span id="maintenance-toggle-label">ON – Site vizibil pentru cititori</span></label>
+ <label><span>Mesaj pentru vizitatori în timpul mentenanței</span><textarea id="maintenance-message-edit" rows="2" maxlength="500" placeholder="Site-ul este temporar indisponibil pentru actualizări.">Site-ul este temporar indisponibil pentru actualizări. Vă mulțumim pentru înțelegere.</textarea></label>
+ <div class="actions"><button type="button" class="btn" id="save-maintenance-message" disabled>Salvează mesajul de mentenanță</button></div><p class="hint" id="maintenance-help">Comutatorul devine activ după conectarea bazei de date și autentificare. Apăsarea lui publică imediat noua stare.</p>
+<div id="github-manual-control" class="notice" hidden>
+<strong>Administrare pe GitHub Pages (fără Supabase).</strong> Butonul ON/OFF este disponibil.
+La schimbarea lui se descarcă <code>site-status.json</code>. Pentru ca modificarea să apară și la cititori,
+încarcă acel fișier în depozitul GitHub și apasă <strong>Commit changes</strong>.
+<a href="https://github.com/biblioteca-brusturoasa/biblioteca-brusturoasa.github.io/upload/main" target="_blank" rel="noopener noreferrer">Deschide încărcarea pe GitHub</a>.
+Doar persoanele cu drepturi în depozit pot publica schimbările. Nu există o comutare online instantanee în acest mod.
+</div>
+</section>
+<section class="cards" aria-label="Situație"><div class="stat"><b id="stat-books">0</b><span>Titluri în catalog</span></div><div class="stat"><b id="stat-news">0</b><span>Noutăți</span></div><div class="stat"><b id="stat-events">0</b><span>Evenimente</span></div><div class="stat"><b id="stat-resources">0</b><span>Resurse electronice</span></div></section>
+<section class="panel" id="records-panel"><div class="panel-heading"><div><h2 id="section-heading">Fondul de carte</h2><p class="hint" id="section-description">Introduceți titlurile din biblioteca reală.</p></div><button type="button" class="btn primary" id="add-record">+ Adaugă</button></div>
+<div class="actions"><input type="search" id="search-records" placeholder="Caută în această secțiune" aria-label="Caută înregistrări" style="max-width:420px"><span class="small" id="record-count"></span></div><div id="records"></div></section>
+<section class="panel" id="media-panel" hidden>
+ <div class="panel-heading"><h2>🎬 Filmări și videoclipuri</h2><p class="hint">Lipește o adresă YouTube/Facebook sau încarcă un MP4 de pe calculator. Platforma este recunoscută automat.</p></div>
+ <form id="video-form" class="box-stack limit">
+   <label><span>Titlul filmării</span><input type="text" id="video-title" maxlength="160" required placeholder="Exemplu: Activitate culturală la bibliotecă"></label>
+   <label><span>Descriere (opțional)</span><textarea id="video-description" maxlength="1000" placeholder="Despre ce este filmarea și cine a realizat-o"></textarea></label>
+   <label><span>Cum adaugi filmarea?</span>
+     <select id="video-kind"><option value="link">Lipește adresa YouTube sau Facebook</option><option value="file">Încarcă un MP4/WebM din calculator</option></select>
+   </label>
+   <label id="video-link-wrap"><span>Adresă video YouTube sau Facebook</span><input type="url" id="video-url" placeholder="https://www.youtube.com/watch?v=... sau https://www.facebook.com/..."></label>
+   <p class="hint" id="video-link-feedback" role="status">Linkul este publicat ca videoclip de pe platforma originală, nu transformat în MP4.</p>
+   <label id="video-file-wrap" hidden><span>Alege filmarea de pe calculator (maxim 25 MB)</span>
+     <input id="video-file" type="file" accept="video/mp4,video/webm,.mp4,.webm" />
+   </label>
+
+   <p class="hint">Publică numai filmări pentru care ai dreptul de utilizare și acordul necesar al persoanelor filmate. Nu descărca și reîncărca filmele altor persoane: utilizează linkul original.</p>
+   <div class="actions"><button class="btn primary" id="video-add" type="submit">+ Adaugă filmarea</button><span id="video-feedback" class="small" role="status"></span></div>
+ </form>
+ <hr><h3>Filmări pregătite pentru publicare</h3><div id="video-list"></div>
+ <p class="notice">După adăugare, apasă <strong>Publică online</strong>. Linkurile YouTube/Facebook rămân pe platformele originale; fișierele MP4 încărcate de tine sunt găzduite separat.</p>
+</section>
+<section class="panel" id="live-panel" hidden>
+ <div class="panel-heading"><h2>🔴 Transmisiuni LIVE</h2></div>
+ <p class="hint">O transmisiune LIVE este diferită de o filmare înregistrată. Introdu un link YouTube Live numai dacă evenimentul chiar este transmis în direct.</p>
+ <form id="live-form" class="box-stack limit">
+  <label><span>Titlul transmisiunii</span><input id="live-title" type="text" maxlength="160" placeholder="Exemplu: Lectură publică – transmisiune"></label>
+  <label><span>Link YouTube către transmisiune</span><input type="url" id="live-url" placeholder="https://www.youtube.com/watch?v=..."></label>
+  <label><span>Descriere</span><textarea id="live-description" maxlength="900"></textarea></label>
+  <label class="check"><input type="checkbox" id="live-enabled"><span>Afișează această transmisiune pe site-ul cititorilor</span></label>
+  <div class="actions"><button type="submit" class="btn primary">Salvează LIVE în draft</button><span id="live-feedback" class="small" role="status"></span></div>
+  <p class="notice">După salvare, mergi la „Salvare și publicare” și apasă „Publică online acum”. Pentru a opri afișarea, debifează caseta și publică din nou.</p>
+ </form>
+</section>
+<section class="panel" id="settings-panel" hidden><div class="panel-heading"><h2>Program și prezentare</h2><button type="button" class="btn primary" id="save-settings">Salvează</button></div>
+<div class="box-stack limit"><div><h3>Programul bibliotecii</h3><p class="hint">Bifează „Confirmat” numai după verificarea orarului.</p><label class="check"><input id="program-confirmed" type="checkbox"><span>Orarul este confirmat și poate fi afișat public.</span></label></div><div class="fieldgrid" id="program-fields"></div><label><span>Observații despre program</span><textarea id="program-notes" placeholder="De exemplu: program special în vacanță"></textarea></label><hr><div><h3>Despre bibliotecă</h3><p class="hint">Textele sunt afișate în secțiunea „Despre bibliotecă”.</p><label class="check"><input type="checkbox" id="info-confirmed"><span>Informațiile sunt verificate și pot fi publicate.</span></label></div><div id="info-fields" class="box-stack"></div><hr><div><h3>Recomandarea săptămânii</h3><p class="hint">O carte prezentată special pe pagina catalogului.</p></div><label><span>Titlu</span><input type="text" id="recommendation-title"></label><label><span>Autor</span><input type="text" id="recommendation-author"></label><label><span>Scurtă prezentare</span><textarea id="recommendation-summary"></textarea></label></div></section>
+<section class="panel" id="publish-panel" hidden><div class="panel-heading"><h2>Publicare și copii de siguranță</h2></div>
+<div class="box-stack"><div class="notice" id="recovery-notice">Anunțurile nepublicate se restaurează automat din copia păstrată în acest browser. Folosiți „Publică online acum” când sunteți pregătit.</div><div class="actions"><button class="btn" id="restore-backup" type="button">Recuperează o versiune anterioară</button><span id="recovery-result" class="small" role="status"></span></div><div class="notice">Modificările se păstrează într-un <b>draft local</b>. În modul GitHub Pages, descarcă biblioteca-data.json și încarcă-l în depozit, cu Commit changes. Dacă Supabase este configurat, publicarea se face direct după autentificare.</div>
+<div><h3>1. Copie de siguranță</h3><p class="hint">Descarcă toate cărțile, anunțurile și setările într-un fișier JSON.</p><div class="actions"><button class="btn primary" type="button" id="export-json">Descarcă datele JSON</button><label class="btn" for="import-json" style="cursor:pointer">Încarcă date dintr-o copie JSON</label><input type="file" id="import-json" accept=".json,application/json" hidden></div></div>
+<hr><div><h3>2. Importul fondului de carte din Excel</h3><p class="hint">În Excel, salvează tabelul ca <b>CSV UTF-8</b>. Coloane acceptate: Titlu, Autor, Domeniu/Gen, Editura, An, ISBN, Exemplare, Cota. Înregistrările noi se adaugă fără a dubla automat cărțile deja existente.</p><div class="actions"><label class="btn" for="import-csv" style="cursor:pointer">Importă catalog CSV</label><input id="import-csv" type="file" accept=".csv,text/csv" hidden></div></div>
+<hr><div><h3>3. Publicare sincronizată</h3>
+ <div class="notice" id="online-status">Conectarea online nu a fost configurată.</div>
+ <div class="actions" style="margin:10px 0"><button class="btn" type="button" id="reload-public">Reîncarcă datele publicate</button></div>
+ <p class="hint">Publicarea actualizează baza de date comună. Cititorii primesc automat noutățile (la următoarea verificare, aproximativ 20 de secunde), iar afișele încărcate sunt afișate pe site.</p>
+ <label class="check"><input type="checkbox" id="mark-live"><span>Am verificat conținutul și confirm că datele demonstrative au fost înlocuite; site-ul poate fi afișat fără eticheta de previzualizare.</span></label>
+ <div class="actions" style="margin-top:14px"><button class="btn primary" type="button" id="publish-online" disabled>Publică online acum</button><span id="publish-result" class="small" role="status"></span></div>
+ </div></div>
+</section>
+<section class="panel" id="book-extra"><h3>Recomandare pentru catalog</h3><p class="small">Poți importa multe titluri simultan dintr-un CSV, folosind secțiunea „Salvare și publicare”. Pentru exemplare, notează câte cărți există, dar disponibilitatea împrumutului trebuie verificată în continuare la bibliotecă.</p><button class="btn" type="button" id="go-import">Mergi la import CSV</button></section>
+<div class="status" id="draft-status" role="status"></div>
+</main></div>
+<dialog id="edit-dialog" aria-labelledby="dialog-title"><form id="edit-form" class="modal"><div class="dialog-header"><h2 id="dialog-title">Adaugă</h2><button class="btn" type="button" id="close-dialog" aria-label="Închide">×</button></div><div id="dynamic-fields" class="fieldgrid"></div><div class="poster-tools" id="poster-tools" hidden>
+ <label><span>Încarcă un afiș al evenimentului (JPG, PNG sau WebP, până la 6 MB)</span><input id="poster-input" type="file" accept="image/jpeg,image/png,image/webp"></label>
+ <img id="poster-preview" class="poster-preview" alt="Previzualizarea afișului" hidden>
+ <label><span>Descrierea afișului pentru accesibilitate</span><input id="poster-alt" type="text" maxlength="180" placeholder="De exemplu: afișul atelierului de lectură"></label>
+ <label class="check"><input type="checkbox" id="poster-remove"><span>Elimină afișul de la acest eveniment</span></label>
+ <p class="hint">Afișele sunt comprimate automat. Publică numai imagini pentru care biblioteca are drepturi și permisiunea persoanelor fotografiate, dacă este cazul.</p>
+ </div><div class="modal-actions"><button type="button" class="btn" id="cancel-dialog">Anulează</button><button type="submit" class="btn primary">Salvează conținutul</button></div></form></dialog>
+<div id="message" hidden role="status"></div>
+<script type="application/json" id="initial-data">{"_status": "preview", "books": [], "news": [], "events": [], "resources": [], "recommendation": {}, "program": {}, "public_info": {}, "video": {}, "live": {}, "logo": "", "rubrics": [], "gallery": []}</script>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const DRAFT_KEY = 'biblioteca-brusturoasa-draft-v4';
+const BACKUPS_KEY = DRAFT_KEY + '-backups';
+const cloud = window.LibraryCloud;
+let publishedRevision = null, unpublishedChanges = false, maintenanceEnabled = false;
+const schemas = {
+ books:{title:'Fondul de carte',desc:'Titluri, autori, clasificări și exemplare din colecția bibliotecii.',fields:[['title','Titlu','text',1],['author','Autor','text',1],['genre','Domeniu / Gen literar','text'],['publisher','Editura','text'],['year','Anul apariției','text'],['isbn','ISBN','text'],['copies','Număr de exemplare','number'],['shelf','Cotă / raft','text']]},
+ news:{title:'Noutăți',desc:'Anunțuri și informații pentru cititori.',fields:[['title','Titlul anunțului','text',1],['date','Data publicării','date'],['body','Textul anunțului','textarea',1],['source','Link pentru detalii (https://)','url']]},
+ events:{title:'Evenimente',desc:'Ateliere, întâlniri, expoziții și alte activități.',fields:[['title','Titlul evenimentului','text',1],['date','Data începerii','date',1],['end_date','Data încheierii','date'],['time','Ora','text'],['place','Locul','text'],['institution','Organizator','text'],['category','Categorie','text'],['body','Descriere','textarea'],['source','Link către anunț (https://)','url'],['featured','Apare în agenda culturală','checkbox']]},
+ resources:{title:'Biblioteca electronică',desc:'Resurse digitale și legături autorizate.',fields:[['title','Titlu','text',1],['author','Autor','text'],['date','Data','date'],['body','Descriere','textarea'],['source','Sursa originală (https://)','url'],['romanian_source','Versiune în limba română (https://)','url']]},
+ gallery:{title:'Galerie foto',desc:'Pentru fotografii noi folosește un URL public https:// către o imagine; fotografiile existente pot rămâne în site.',fields:[['title','Titlul fotografiei','text',1],['description','Descriere / text alternativ','textarea'],['url','URL public imagine (https://)','url']]},
+ rubrics:{title:'Alte rubrici',desc:'Întrebări frecvente și informații utile.',fields:[['title','Titlu','text',1],['body','Conținut','textarea',1],['source','Link opțional (https://)','url'],['link_label','Textul legăturii','text']]}
+};
+const days={luni:'Luni',marti:'Marți',miercuri:'Miercuri',joi:'Joi',vineri:'Vineri',sambata:'Sâmbătă',duminica:'Duminică'};
+const info={intro:'Prezentare',services:'Servicii și acces',collections:'Colecții',activities:'Activități',notes:'Precizări'};
+const initial=JSON.parse($('initial-data').textContent);
+// Nu încărcăm drafturi din browser înainte de autentificare.
+let data=structuredClone(initial);
+let draftFromLocal=false;
+let isEditorAuthenticated=false;
+let active='news', editing=-1, noticeTimer;
+function h(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=String(txt);return e;}
+function notify(message){const m=$('message');m.textContent=message;m.hidden=false;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>m.hidden=true,4500);}
+function snapshotBackup(){
+ try {
+   const previous=localStorage.getItem(DRAFT_KEY);
+   if(!previous)return;
+   const saved=JSON.parse(localStorage.getItem(BACKUPS_KEY)||'[]');
+   if(saved[0]?.content!==previous){saved.unshift({at:new Date().toISOString(),content:previous});localStorage.setItem(BACKUPS_KEY,JSON.stringify(saved.slice(0,5)));}
+ }catch(err){console.warn('Copie de recuperare indisponibilă',err);}
+}
+function persistDraft(){
+ try{localStorage.setItem(DRAFT_KEY,JSON.stringify(data));return true;}
+ catch(err){$('draft-status').textContent='⚠ Salvarea locală a eșuat. Descărcați o copie JSON.';notify('Nu s-a putut salva draftul!');return false;}
+}
+function markSaved(){unpublishedChanges=true;snapshotBackup();const ok=persistDraft();if(ok)$('draft-status').textContent='✓ Modificările sunt salvate automat în acest browser. Nu sunt încă publicate.';renderCounters();return ok;}
+function restoreDraftIfPresent(){
+ try {
+   const local=localStorage.getItem(DRAFT_KEY);
+   if(!local)return false;
+   const restored=normalizeContent(JSON.parse(local));
+   data=restored;unpublishedChanges=true;
+   $('mark-live').checked=data._status==='live';
+   renderCounters();render();
+   $('draft-status').textContent='✓ Anunțurile nepublicate au fost recuperate automat din acest browser.';
+   $('recovery-result').textContent='Draft recuperat; nu s-a publicat nimic.';
+   return true;
+ }catch(err){$('draft-status').textContent='Există un draft local care nu poate fi citit. Nu îl ștergeți.';return false;}
+}
+$('restore-backup').onclick=()=>{
+ try{
+   const saved=JSON.parse(localStorage.getItem(BACKUPS_KEY)||'[]');
+   if(!saved.length){$('recovery-result').textContent='Nu există versiuni anterioare în acest browser.';return;}
+   const latest=saved[0];
+   if(!confirm('Recuperați copia din '+new Date(latest.at).toLocaleString('ro-RO')+'? Versiunea curentă va fi păstrată ca rezervă.'))return;
+   snapshotBackup();
+   data=normalizeContent(JSON.parse(latest.content));
+   if(!markSaved())return;
+   render();$('recovery-result').textContent='Versiunea anterioară a fost recuperată. Apăsați Publică online pentru a o publica.';
+ }catch(err){$('recovery-result').textContent='Copia nu poate fi recuperată: '+err.message;}
+};
+function renderCounters(){for(const key of Object.keys(schemas)){const el=$('n-'+key);if(el)el.textContent=Array.isArray(data[key])?data[key].length:0;}for(const key of ['books','news','events','resources'])$('stat-'+key).textContent=(data[key]||[]).length.toLocaleString('ro');}
+function render(){for(const b of document.querySelectorAll('.navbtn')){b.classList.toggle('active',b.dataset.tab===active);b.setAttribute('aria-current',b.dataset.tab===active?'page':'false');}
+ const records=!!schemas[active];$('records-panel').hidden=!records;$('book-extra').hidden=active!=='books';$('settings-panel').hidden=active!=='settings';$('publish-panel').hidden=active!=='publish';$('media-panel').hidden=active!=='media';$('live-panel').hidden=active!=='live';
+ if(records){$('section-heading').textContent=schemas[active].title;$('section-description').textContent=schemas[active].desc;$('search-records').value='';renderRecords();}
+ if(active==='settings')populateSettings();if(active==='media')renderVideoList();if(active==='live')populateLiveForm();}
+function renderRecords(){const root=$('records');root.replaceChildren();const all=Array.isArray(data[active])?data[active]:[];const query=($('search-records').value||'').toLocaleLowerCase('ro');const shown=all.map((v,i)=>({v,i})).filter(({v})=>Object.values(v).some(val=>String(val).toLocaleLowerCase('ro').includes(query))).slice(0,150);
+ $('record-count').textContent=`${all.filter(v=>Object.values(v).some(val=>String(val).toLocaleLowerCase('ro').includes(query))).length} rezultate`+(shown.length>=150?' · primele 150 afișate':'');
+ if(!shown.length){root.append(h('p','muted','Nu există înregistrări în această secțiune.'));return;}
+ const frag=document.createDocumentFragment();for(const {v,i} of shown){const r=h('div','record'),description=h('div','record-info');description.append(h('div','record-title',v.title||'Fără titlu'));const details=[v.author||v.date||'',v.genre||v.place||'',v.isbn?'ISBN '+v.isbn:'',v.poster?'🖼 Afiș atașat':''].filter(Boolean).join(' · ');if(details)description.append(h('div','record-details',details));const buttons=h('div','actions record-actions');const edit=h('button','btn','Modifică');edit.type='button';edit.addEventListener('click',()=>openRecord(i));const del=h('button','btn danger','Șterge');del.type='button';del.addEventListener('click',()=>deleteRecord(i));buttons.append(edit,del);r.append(description,buttons);frag.append(r);}root.append(frag);}
+function formField([name,label,type,required],value){const wrap=h('label',type==='textarea'?'wide':'');if(type==='checkbox'){wrap.className='check wide';const input=h('input');input.type='checkbox';input.name=name;input.checked=value===true;const text=h('span','',label);wrap.append(input,text);return wrap;}wrap.append(h('span','',label));const input=h(type==='textarea'?'textarea':'input');if(type!=='textarea')input.type=type;input.name=name;input.value=value??'';input.required=!!required;if(type==='url')input.placeholder='https://';if(type==='number')input.min='0';wrap.append(input);return wrap;}
+function openRecord(index){editing=index;const obj=index>=0?data[active][index]:{};$('dialog-title').textContent=(index>=0?'Modifică':'Adaugă')+' · '+schemas[active].title;const root=$('dynamic-fields');root.replaceChildren(...schemas[active].fields.map(f=>formField(f,obj[f[0]])));
+ $('poster-tools').hidden=active!=='events';$('poster-input').value='';$('poster-remove').checked=false;$('poster-alt').value=obj.poster_alt||'';
+ const image=$('poster-preview');image.hidden=!obj.poster;image.src=obj.poster||'';
+ $('edit-dialog').showModal();}
+function deleteRecord(index){const item=data[active][index];if(!confirm('Ștergi „'+(item?.title||'această înregistrare')+'” din draft?'))return;data[active].splice(index,1);markSaved();renderRecords();}
+function checkUrl(str){if(!str)return true;try{const url=new URL(str);return url.protocol==='https:'&&!url.username&&!url.password;}catch{return false;}}
+$('edit-form').addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;const obj=editing>=0?{...data[active][editing]}:{};for(const [name,label,type] of schemas[active].fields){const input=form.elements.namedItem(name);obj[name]=type==='checkbox'?input.checked:String(input.value||'').trim();if(type==='url'&&!checkUrl(obj[name])){notify('Link invalid: '+label+'. Sunt acceptate doar adrese https://');input.focus();return;}}
+ if(active==='events'){
+   if($('poster-remove').checked){delete obj.poster;delete obj.poster_alt;}
+   else if($('poster-input').files[0]){
+     const submit = form.querySelector('[type=submit]');submit.disabled=true;
+     try {obj.poster=await convertPoster($('poster-input').files[0]);}
+     catch(err){notify('Afișul nu a putut fi pregătit: '+err.message);submit.disabled=false;return;}
+     finally{submit.disabled=false;}
+   }
+   if(!$('poster-remove').checked)obj.poster_alt=$('poster-alt').value.trim();
+ }
+ if(active==='gallery'&&!obj.url&&!obj.name){notify('Pentru o fotografie nouă este necesar un URL https:// către imagine.');return;}
+ if(['events','resources','rubrics'].includes(active)&&!obj.id)obj.id='item-'+Math.random().toString(36).slice(2,10);
+ if(active==='gallery'&&!obj.kind)obj.kind='photo';
+ if(editing<0)data[active].unshift(obj);else data[active][editing]=obj;
+ const shouldPublish=e.submitter?.dataset.publish==='yes';if(!markSaved())return;$('edit-dialog').close();renderRecords();if(shouldPublish){active='publish';render();$('publish-online').click();}else {{$('quick-feedback').textContent='✓ Conținut salvat. Apasă „2. Publică online”.';window.scrollTo({top:0,behavior:'smooth'});}notify('Conținut salvat. Pentru publicare, apasă „Publică online”.');}});
+// Publicare rapidă: UI simplu, aceleași controale Supabase securizate.
+$('quick-upload').onclick=()=>{
+ const type=$('quick-type').value;
+ active=type;render();
+ if(schemas[type]){
+   openRecord(-1);
+   $('quick-feedback').textContent='Completează formularul, apoi apasă Salvează.';
+ }else{
+   $('quick-feedback').textContent=type==='media'?'Completează filmarea și apasă Adaugă filmarea.':type==='live'?'Completează datele LIVE și salvează-le.':'Modifică datele și apasă Salvează.';
+   $(type==='media'?'media-panel':type==='live'?'live-panel':'settings-panel').scrollIntoView({behavior:'smooth',block:'start'});
+ }
+};
+$('quick-publish').onclick=()=>{
+ if(!isEditorAuthenticated||!cloud.enabled||!cloud.hasSession){$('quick-feedback').textContent='Conectați-vă întâi la contul de administrare.';return;}
+ const button=$('publish-online');
+ if(button.disabled){$('quick-feedback').textContent='Publicarea este deja în curs.';return;}
+ $('quick-publish').disabled=true;
+ $('quick-feedback').textContent='Se publică online…';
+ button.click();
+};
+$('close-dialog').onclick=$('cancel-dialog').onclick=()=>$('edit-dialog').close();$('add-record').onclick=()=>openRecord(-1);$('search-records').addEventListener('input',renderRecords);
+for(const b of document.querySelectorAll('.navbtn'))b.addEventListener('click',()=>{active=b.dataset.tab;if($('quick-type')&&[...$('quick-type').options].some(o=>o.value===active))$('quick-type').value=active;render();window.scrollTo({top:0,behavior:'smooth'});});$('go-import').onclick=()=>{active='publish';render();};
+function initSettings(){for(const [key,label] of Object.entries(days))$('program-fields').append(formField([key,label,'text'],' '));for(const [key,label]of Object.entries(info))$('info-fields').append(formField([key,label,'textarea'],' '));}
+function populateSettings(){const p=data.program||{},i=data.public_info||{};$('program-confirmed').checked=!!p.confirmed;for(const key of Object.keys(days))$('program-fields').querySelector('[name="'+key+'"]').value=p.days?.[key]||'';$('program-notes').value=p.notes||'';$('info-confirmed').checked=!!i.confirmed;for(const key of Object.keys(info))$('info-fields').querySelector('[name="'+key+'"]').value=i[key]||'';$('recommendation-title').value=data.recommendation?.title||'';$('recommendation-author').value=data.recommendation?.author||'';$('recommendation-summary').value=data.recommendation?.summary||'';}
+$('save-settings').onclick=()=>{const daysData={};for(const key of Object.keys(days))daysData[key]=$('program-fields').querySelector('[name="'+key+'"]').value.trim();data.program={...data.program,confirmed:$('program-confirmed').checked,days:daysData,notes:$('program-notes').value.trim()};const infoData={...data.public_info,confirmed:$('info-confirmed').checked};for(const key of Object.keys(info))infoData[key]=$('info-fields').querySelector('[name="'+key+'"]').value.trim();data.public_info=infoData;data.recommendation={title:$('recommendation-title').value.trim(),author:$('recommendation-author').value.trim(),summary:$('recommendation-summary').value.trim()};markSaved();notify('Programul și prezentarea au fost salvate în draft.');};
+function download(name,text,mime){const file=new Blob([text],{type:mime});const url=URL.createObjectURL(file);const a=h('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);}
+$('export-json').onclick=()=>download('biblioteca-data.json',JSON.stringify(data,null,2)+'\n','application/json;charset=utf-8');
+$('import-json').addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{const obj=JSON.parse(await f.text());if(!obj||typeof obj!=='object'||!Array.isArray(obj.books))throw Error('Fișierul nu conține o listă de cărți.');if(!confirm('Înlocuiești draftul cu datele din fișier?'))return;data={...structuredClone(initial),...obj};for(const k of Object.keys(schemas))if(!Array.isArray(data[k]))data[k]=[];markSaved();render();notify('Datele au fost importate.');}catch(err){notify('Nu s-a putut importa JSON: '+err.message);}finally{e.target.value='';}});
+function parseCsv(text){text=text.replace(/^\uFEFF/,'');const head=text.split(/\r?\n/)[0]||'';const separators=[',',';','\t'];const sep=separators.sort((a,b)=>head.split(b).length-head.split(a).length)[0];const rows=[];let row=[],field='',quoted=false;for(let i=0;i<text.length;i++){const c=text[i];if(c==='"'){if(quoted&&text[i+1]==='"'){field+='"';i++;}else quoted=!quoted;}else if(c===sep&&!quoted){row.push(field);field='';}else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);if(row.some(x=>x.trim()))rows.push(row);row=[];field='';}else field+=c;}row.push(field);if(row.some(x=>x.trim()))rows.push(row);return rows;}
+function normal(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'');}
+$('import-csv').addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{const rows=parseCsv(await f.text());if(rows.length<2)throw Error('Tabelul nu conține rânduri de importat.');const names={title:['titlu','titlucarte','denumire','titlul'],author:['autor','autori'],genre:['gen','domeniu','categorie','genliterar'],publisher:['editura','editor'],year:['an','anaparitie','anulaparitiei'],isbn:['isbn'],copies:['exemplare','nrexemplare','numarexemplare','bucati'],shelf:['cota','raft','cotasemnalizare']};const columns={};rows[0].forEach((col,index)=>{for(const [key,aliases] of Object.entries(names))if(aliases.includes(normal(col)))columns[key]=index;});if(columns.title===undefined)throw Error('Prima linie trebuie să conțină coloana Titlu.');let added=0,skipped=0;const existing=new Set((data.books||[]).map(v=>v.isbn?'isbn:'+normal(v.isbn):'title:'+normal(v.title)+'|'+normal(v.author)));for(const row of rows.slice(1)){const obj={};for(const [key,index] of Object.entries(columns))obj[key]=String(row[index]||'').trim();if(!obj.title){skipped++;continue;}const unique=obj.isbn?'isbn:'+normal(obj.isbn):'title:'+normal(obj.title)+'|'+normal(obj.author);if(existing.has(unique)){skipped++;continue;}existing.add(unique);data.books.push(obj);added++;}markSaved();render();notify(`Import CSV: ${added} cărți adăugate; ${skipped} rânduri ignorate sau duplicate.`);}catch(err){notify('Nu s-a putut importa CSV: '+err.message);}finally{e.target.value='';}});
+// Afiș: compresie în browser, fără biblioteci externe și fără date ascunse.
+function convertPoster(file){
+ return new Promise((resolve,reject)=>{
+  if(!['image/png','image/jpeg','image/webp'].includes(file.type)) return reject(Error('Folosiți JPG, PNG sau WebP.'));
+  if(file.size>6*1024*1024) return reject(Error('Fișierul depășește 6 MB.'));
+  const objectUrl=URL.createObjectURL(file), img=new Image();
+  img.onload=()=>{try{
+   const factor=Math.min(1,1400/img.naturalWidth,1900/img.naturalHeight);
+   const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.naturalWidth*factor));canvas.height=Math.max(1,Math.round(img.naturalHeight*factor));
+   canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+   const result=canvas.toDataURL('image/webp',.8);
+   if(!result.startsWith('data:image/webp;base64,'))throw Error('Browserul nu poate comprima în WebP.');
+   if(result.length>1700000)throw Error('Imaginea este prea complexă; micșorați-o înainte de încărcare.');
+   resolve(result);
+  }catch(e){reject(e);}finally{URL.revokeObjectURL(objectUrl);}};
+  img.onerror=()=>{URL.revokeObjectURL(objectUrl);reject(Error('Imaginea nu poate fi deschisă.'));};
+  img.src=objectUrl;
+ });
+}
+$('poster-input').addEventListener('change',async e=>{
+ const file=e.target.files?.[0];if(!file)return;
+ try {const image=await convertPoster(file);$('poster-preview').src=image;$('poster-preview').hidden=false;$('poster-remove').checked=false;}
+ catch(error){notify(error.message);e.target.value='';}
+});
+$('poster-remove').addEventListener('change',e=>{if(e.target.checked){$('poster-input').value='';$('poster-preview').hidden=true;}});
+function normalizeContent(remote){
+ const content={...remote};
+ for(const key of Object.keys(schemas))if(!Array.isArray(content[key]))content[key]=[];
+ content.program=content.program||{};content.public_info=content.public_info||{};
+ if(!content.video||typeof content.video!=='object')content.video={};
+ if(!content.live||typeof content.live!=='object')content.live={};
+ return content;
+}
+function updateMaintenancePanel(value){
+ maintenanceEnabled=!!value?.enabled;
+ $('maintenance-toggle').checked=!maintenanceEnabled;
+ $('maintenance-toggle-label').textContent=maintenanceEnabled?'OFF – Site în mentenanță':'ON – Site vizibil pentru cititori';
+ $('maintenance-status').textContent=maintenanceEnabled?'OFF · Mentenanță':'ON · Public';
+ $('maintenance-status').classList.toggle('off',maintenanceEnabled);
+ if(value?.message)$('maintenance-message-edit').value=value.message;
+}
+function setAuthenticated(enabled){
+ const ok=!!(enabled && cloud && cloud.enabled);
+ isEditorAuthenticated=ok;
+ $('admin-layout').hidden=!ok;
+ $('login-gate').hidden=ok;
+ $('logout-button').hidden=!ok;
+ $('login-form').hidden=!cloud.enabled;
+ $('security-setup').hidden=!!cloud.enabled;
+ $('publish-online').disabled=!ok;
+ $('publish-online').textContent='Publică online acum';
+ $('maintenance-toggle').disabled=!ok;
+ $('save-maintenance-message').disabled=!ok;
+ $('github-manual-control').hidden=true;
+ $('reload-public').disabled=!ok;
+ $('online-status').textContent=ok
+   ? 'Cont autorizat. Publicarea se salvează prin Supabase, conform regulilor de acces.'
+   : 'Acces de administrare indisponibil fără autentificare și autorizare.';
+ $('maintenance-help').textContent=ok
+   ? 'Schimbările ON/OFF sunt salvate numai prin cont autorizat.'
+   : 'Comutatorul este blocat până la autentificare.';
+}
+async function readPublished(ask=false){
+ if(!isEditorAuthenticated || !cloud.enabled) return;
+ if(ask&&unpublishedChanges&&!confirm('Reîncarci datele online? Draftul local nepublicat va fi înlocuit. Descarcă întâi o copie JSON, dacă dorești să îl păstrezi.'))return;
+ try{
+   let content;
+   if(cloud.enabled){const result=await cloud.read();content=result.data;publishedRevision=result.revision;}
+   else{
+     const [response, statusResponse]=await Promise.all([
+       fetch('./biblioteca-data.json?check='+Date.now(),{cache:'no-store'}),
+       fetch('./site-status.json?check='+Date.now(),{cache:'no-store'})
+     ]);
+     if(!response.ok)throw Error('Nu există biblioteca-data.json pe site.');
+     content=await response.json();
+     if(statusResponse.ok){const settings=await statusResponse.json();content.maintenance=settings.maintenance||{enabled:false};}
+   }
+   data=normalizeContent(content);
+   unpublishedChanges=false;
+   if(ask){snapshotBackup();try{localStorage.removeItem(DRAFT_KEY);}catch{}}
+   $('mark-live').checked=data._status==='live';
+   updateMaintenancePanel(data.maintenance);
+   renderCounters();render();
+   $('draft-status').textContent=cloud.enabled?'✓ Datele publicate au fost încărcate.':'✓ Fișierele publicate au fost citite de pe GitHub Pages.';
+   $('publish-result').textContent=cloud.enabled?'Versiunea online: '+publishedRevision:'';
+   if(!ask)restoreDraftIfPresent();
+   if(ask)notify('Informațiile publicate au fost reîncărcate.');
+ }catch(e){restoreDraftIfPresent();$('publish-result').textContent='Nu s-au putut încărca datele online: '+e.message;notify('Conexiunea online nu răspunde. Draftul local rămâne disponibil.');}
+}
+$('reload-public').onclick=()=>readPublished(true);
+$('publish-online').onclick=async()=>{
+ if(!isEditorAuthenticated || !cloud.enabled){notify('Accesul de administrare necesită autentificare autorizată.');return;}
+ if(!cloud.enabled){
+   const output=structuredClone(data);
+   output._status=$('mark-live').checked?'live':'preview';
+   delete output.maintenance; // ON/OFF se administrează separat din site-status.json.
+   download('biblioteca-data.json',JSON.stringify(output,null,2)+'\n','application/json;charset=utf-8');
+   $('publish-result').textContent='Fișierul a fost descărcat. Încarcă biblioteca-data.json în depozitul GitHub și apasă Commit changes.';
+   notify('Fișier pregătit. Publicarea se finalizează în GitHub.');
+   return;
+ }
+  if(!cloud.hasSession){$('quick-publish').disabled=false;return notify('Autentifică-te mai întâi.');}
+  if(publishedRevision===null){$('quick-publish').disabled=false;return notify('Nu există o versiune online încărcată. Încearcă Reîncarcă datele publicate.');}
+ const button=$('publish-online');button.disabled=true;$('publish-result').textContent='Pregătesc publicarea…';
+ try {
+   const output=structuredClone(data);
+   // Comutatorul de mentenanță este independent de publicarea catalogului:
+   // citim starea curentă și evităm revenirea accidentală la o stare veche.
+   const live=await cloud.read();
+   if(live.revision!==publishedRevision)throw Error('Altă modificare a fost publicată între timp. Exportă draftul, apoi reîncarcă versiunea online înainte de a publica.');
+   output.maintenance=live.data.maintenance||{enabled:false,message:''};
+   for(const event of output.events||[]){
+     if(typeof event.poster==='string'&&event.poster.startsWith('data:image/webp;base64,')){
+       $('publish-result').textContent='Încarc afișul pentru „'+event.title+'”…';
+       event.poster=await cloud.uploadPoster(event.poster);
+     }
+   }
+   output._status=$('mark-live').checked?'live':'preview';
+   const result=await cloud.publish(output,publishedRevision);
+   data=output;publishedRevision=result.revision;unpublishedChanges=false;
+   snapshotBackup();try{localStorage.removeItem(DRAFT_KEY);}catch{}
+   updateMaintenancePanel(output.maintenance);
+   renderCounters();render();
+   $('draft-status').textContent='✓ Toate modificările sunt publicate online.';
+   $('publish-result').textContent='✓ Publicat! Versiunea '+publishedRevision+'. Cititorii primesc actualizarea automat.';$('quick-feedback').textContent='✓ Publicat online cu succes. Modificările vor apărea pe site-ul cititorilor.';
+   notify('Catalogul, evenimentele, filmările și setările LIVE au fost publicate.');
+ }catch(e){$('publish-result').textContent='Publicarea a eșuat: '+e.message;$('quick-feedback').textContent='Publicarea nu a reușit: '+e.message+' Modificările rămân salvate în browser.';notify('Draftul rămâne salvat local.');}
+ finally{button.disabled=false;$('quick-publish').disabled=false;}
+};
+$('maintenance-toggle').addEventListener('change',async event=>{
+ if(!isEditorAuthenticated || !cloud.enabled){event.target.checked=!maintenanceEnabled;notify('Autentificare obligatorie pentru ON/OFF.');return;}
+ const enabled=!event.target.checked;
+ const previous=!maintenanceEnabled;
+ if(enabled&&!confirm('Închizi acum afișarea site-ului pentru vizitatori? Panoul bibliotecarului va rămâne disponibil.')){
+   event.target.checked=previous;return;
+ }
+ const toggle=$('maintenance-toggle');toggle.disabled=true;
+ try{
+   if(!cloud.enabled){
+     const message=$('maintenance-message-edit').value.trim().slice(0,500)||'Site-ul este temporar indisponibil pentru actualizări.';
+     const state={maintenance:{enabled,message,updated_at:new Date().toISOString()},version:1};
+     download('site-status.json',JSON.stringify(state,null,2)+'\n','application/json;charset=utf-8');
+     updateMaintenancePanel(state.maintenance);
+     $('maintenance-help').textContent='Fișierul site-status.json a fost descărcat. IMPORTANT: încarcă-l în GitHub și apasă Commit changes. Până atunci, site-ul public rămâne neschimbat.';
+     notify('Stare pregătită. Acum încarcă site-status.json în GitHub.');
+     return;
+   }
+   const live=await cloud.read();
+   const message=$('maintenance-message-edit').value.trim().slice(0,500)||'Site-ul este temporar indisponibil pentru actualizări. Vă mulțumim pentru înțelegere.';
+   const content={...live.data,maintenance:{enabled,message,updated_at:new Date().toISOString()}};
+   const result=await cloud.publish(content,live.revision);
+   if(!unpublishedChanges){data=normalizeContent(content);publishedRevision=result.revision;}
+   else if(publishedRevision===live.revision){publishedRevision=result.revision;data.maintenance=content.maintenance;}
+   else {data.maintenance=content.maintenance;}
+   updateMaintenancePanel(content.maintenance);
+   $('maintenance-help').textContent=enabled?'Mentenanța este activă. Vizitatorii vor vedea mesajul de mentenanță la actualizare.':'Site-ul este din nou vizibil pentru cititori.';
+   notify(enabled?'Site-ul a fost trecut în mentenanță.':'Site-ul cititorilor a fost redeschis.');
+ }catch(e){toggle.checked=previous;notify('Nu s-a putut schimba starea site-ului: '+e.message);}
+ finally{toggle.disabled=false;}
+});
+$('save-maintenance-message').addEventListener('click',async()=>{
+ if(!isEditorAuthenticated || !cloud.enabled){notify('Autentificare obligatorie pentru publicare.');return;}
+ if(!cloud.enabled){
+   const message=$('maintenance-message-edit').value.trim().slice(0,500)||'Site-ul este temporar indisponibil pentru actualizări.';
+   const state={maintenance:{enabled:maintenanceEnabled,message,updated_at:new Date().toISOString()},version:1};
+   download('site-status.json',JSON.stringify(state,null,2)+'\n','application/json;charset=utf-8');
+   notify('Încarcă site-status.json în GitHub și apasă Commit changes.');
+   return;
+ }
+ if(!cloud.hasSession)return notify('Este necesară conectarea bibliotecarului.');
+ const button=$('save-maintenance-message');button.disabled=true;
+ try{
+   const live=await cloud.read();
+   const message=$('maintenance-message-edit').value.trim().slice(0,500)||'Site-ul este temporar indisponibil pentru actualizări. Vă mulțumim pentru înțelegere.';
+   const content={...live.data,maintenance:{enabled:!!live.data.maintenance?.enabled,message,updated_at:new Date().toISOString()}};
+   const result=await cloud.publish(content,live.revision);
+   if(!unpublishedChanges){data=normalizeContent(content);publishedRevision=result.revision;}
+   else if(publishedRevision===live.revision){publishedRevision=result.revision;data.maintenance=content.maintenance;}
+   else{data.maintenance=content.maintenance;}
+   updateMaintenancePanel(content.maintenance);
+   notify('Mesajul pentru vizitatori a fost actualizat.');
+ }catch(err){notify('Nu s-a putut actualiza mesajul: '+err.message);}
+ finally{button.disabled=false;}
+});
+// Filmări, linkuri externe și LIVE - toate rămân sub același cont autorizat.
+function mediaEntries() {
+  if (!data.video || typeof data.video !== 'object' || Array.isArray(data.video)) data.video = {};
+  if (!Array.isArray(data.video.items)) data.video.items=[];
+  return data.video.items;
+}
+function parseYouTubeId(url) {
+ try {
+  const u=new URL(url),host=u.hostname.toLowerCase().replace(/^www\./,'');
+  let id='';
+  if(host==='youtu.be') id=u.pathname.split('/')[1]||'';
+  else if(host==='youtube.com'||host==='m.youtube.com'||host==='youtube-nocookie.com')
+    id=u.pathname==='/watch'?u.searchParams.get('v'):(u.pathname.match(/^\/(?:shorts|live|embed)\/([^/?#]+)/)||[])[1];
+  return /^[A-Za-z0-9_-]{11}$/.test(id||'')?id:'';
+ }catch{return '';}
+}
+function normalizeFacebook(url) {
+ try {
+  const u=new URL(url),host=u.hostname.toLowerCase();
+  if(u.protocol!=='https:' || !['facebook.com','www.facebook.com','m.facebook.com','web.facebook.com','fb.watch'].includes(host)) return '';
+  if(!u.pathname || u.pathname==='/')return '';
+  u.hash='';return u.href;
+ }catch{return '';}
+}
+function detectVideoLink(value){
+ const youtube=parseYouTubeId(value);
+ if(youtube)return {kind:'youtube',url:'https://www.youtube.com/watch?v='+youtube};
+ const facebook=normalizeFacebook(value);
+ if(facebook)return {kind:'facebook',url:facebook};
+ return null;
+}
+function updateVideoFields() {
+ const isFile=$('video-kind').value==='file';
+ $('video-link-wrap').hidden=isFile; $('video-file-wrap').hidden=!isFile;
+ $('video-link-feedback').hidden=isFile;
+ $('video-url').required=!isFile; $('video-file').required=isFile;
+ if(!isFile)detectVideoInput();
+}
+function detectVideoInput(){
+ const raw=$('video-url').value.trim();
+ const found=raw?detectVideoLink(raw):null;
+ $('video-link-feedback').textContent=!raw?'Lipește adresa: YouTube sau Facebook este recunoscut automat. Video rămâne pe platforma originală (fără conversie MP4).':found?'✓ Link '+(found.kind==='youtube'?'YouTube':'Facebook')+' recunoscut. Poate fi adăugat.':'Adresa nu este un link YouTube sau Facebook valid.';
+}
+$('video-kind').addEventListener('change',updateVideoFields);
+$('video-url').addEventListener('input',detectVideoInput);
+updateVideoFields();
+
+function renderVideoList() {
+ const root=$('video-list');root.replaceChildren();
+ const items=mediaEntries();
+ if(!items.length){root.append(h('p','muted','Nu ai încă filmări adăugate.'));return;}
+ items.forEach((item,i)=>{
+  const entry=h('div','record'),details=h('div','record-info');
+  details.append(h('div','record-title',item.title || 'Fără titlu'));
+  details.append(h('div','record-details',({youtube:'YouTube',facebook:'Facebook',file:'Filmarea încărcată'}[item.kind]||item.kind||'Filmare')+' · '+(item.description||'')));
+  const tools=h('div','actions');
+  if(item.url){const l=h('a','btn','Deschide filmarea ↗');l.href=item.url;l.target='_blank';l.rel='noopener noreferrer';tools.append(l);}
+  const del=h('button','btn danger','Elimină din listă');del.type='button';del.onclick=()=>{
+    if(!confirm('Elimini filmarea din lista publicabilă? Fișierele încărcate anterior nu se șterg automat din spațiul de stocare.'))return;
+    mediaEntries().splice(i,1);markSaved();renderVideoList();notify('Filmarea a fost eliminată din draft. Publică online modificarea.');
+  };tools.append(del);entry.append(details,tools);root.append(entry);
+ });
+}
+$('video-form').addEventListener('submit',async e=>{
+ e.preventDefault();if(!cloud.enabled||!cloud.hasSession)return notify('Autentifică-te în Supabase pentru a adăuga filmări.');
+ const title=$('video-title').value.trim(),description=$('video-description').value.trim();
+ let kind=$('video-kind').value;
+ if(!title)return notify('Completează titlul.');
+ const button=$('video-add');button.disabled=true;
+ try {
+  let url='', storage_path='';
+  if(kind==='link'){
+    const found=detectVideoLink($('video-url').value.trim());
+    if(!found)throw Error('Introdu o adresă validă YouTube sau Facebook.');
+    kind=found.kind;url=found.url;
+  } else if(kind==='file'){
+    const file=$('video-file').files?.[0];if(!file)throw Error('Apasă „Alege filmarea”.');
+    if(!['video/mp4','video/webm'].includes(file.type))throw Error('Sunt permise numai MP4/WebM.');
+    if(file.size>25*1024*1024)throw Error('Fișier prea mare: maxim 25 MB. Pentru filmări lungi folosește YouTube.');
+    $('video-feedback').textContent='Se încarcă filmarea…';
+    const uploaded=await cloud.uploadVideo(file);url=uploaded.url;storage_path=uploaded.path;
+  }
+  const entry={id:crypto.randomUUID(),kind,title,description,url,storage_path,created_at:new Date().toISOString()};
+  mediaEntries().unshift(entry);
+  if(!markSaved()){mediaEntries().shift();throw Error('Salvarea locală a eșuat. Nu închideți pagina.');}
+  renderVideoList();$('video-form').reset();updateVideoFields();
+  $('video-feedback').textContent='Filmare adăugată în draft. Mai trebuie apăsat „Publică online”.';
+ }catch(err){$('video-feedback').textContent='Nu s-a salvat: '+err.message;notify(err.message);}
+ finally{button.disabled=false;}
+});
+function populateLiveForm() {
+ const v=data.live&&typeof data.live==='object'&&!Array.isArray(data.live)?data.live:{};
+ $('live-title').value=v.title||'';
+ $('live-description').value=v.description||'';
+ $('live-url').value=/^[A-Za-z0-9_-]{11}$/.test(v.youtube||'')?'https://www.youtube.com/watch?v='+v.youtube:'';
+ $('live-enabled').checked=v.enabled!==false && !!v.youtube;
+}
+$('live-form').addEventListener('submit',e=>{
+ e.preventDefault();if(!cloud.enabled||!cloud.hasSession)return notify('Autentifică-te înainte de salvare.');
+ const raw=$('live-url').value.trim(),id=raw?parseYouTubeId(raw):'';
+ if(raw&&!id){$('live-feedback').textContent='Link YouTube invalid.';return;}
+ if($('live-enabled').checked&&!id){$('live-feedback').textContent='Pentru a afișa LIVE trebuie să introduci linkul.';return;}
+ data.live={...(data.live||{}),title:$('live-title').value.trim()||'Transmisiune LIVE',description:$('live-description').value.trim(),youtube:id,enabled:$('live-enabled').checked};
+ markSaved();$('live-feedback').textContent='Setările LIVE sunt în draft. Apasă „Publică online acum”.';notify('Setări LIVE salvate în draft.');
+});
+
+
+// PIN pentru afișarea adresei: doar confidențialitate vizuală, NU control de acces.
+const emailCipher={salt:'+Ow0SsOE6cWt6q0nNqVU5w==',iv:'LYxP6TdNm1EH/qWK',data:'YBS3Zeiky4vZQ03MXEp4PeP7l5emstBv35xQr5nIO0KJ7bNqHgERffZugKUi'};
+const toBytes=(value)=>Uint8Array.from(atob(value),char=>char.charCodeAt(0));
+function maskEmail(){
+  $('login-email').value='';$('login-email').readOnly=true;
+  $('email-cover').hidden=false;$('email-pin').value='';
+  $('email-reveal').textContent='Arată adresa';
+  $('pin-status').textContent='';
+}
+$('email-reveal').addEventListener('click',async()=>{
+  if($('email-cover').hidden){maskEmail();return;}
+  const pin=$('email-pin').value.trim();
+  if(!/^\d{4}$/.test(pin)){$('pin-status').textContent='Introdu PIN-ul format din 4 cifre.';return;}
+  const btn=$('email-reveal');btn.disabled=true;$('pin-status').textContent='Se verifică PIN-ul…';
+  try{
+    if(!crypto?.subtle)throw Error('Browserul nu permite decriptarea locală. Deschide site-ul prin HTTPS.');
+    const keyMaterial=await crypto.subtle.importKey('raw',new TextEncoder().encode(pin),'PBKDF2',false,['deriveKey']);
+    const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:toBytes(emailCipher.salt),iterations:220000,hash:'SHA-256'},keyMaterial,{name:'AES-GCM',length:256},false,['decrypt']);
+    const decrypted=await crypto.subtle.decrypt({name:'AES-GCM',iv:toBytes(emailCipher.iv)},key,toBytes(emailCipher.data));
+    const email=new TextDecoder().decode(decrypted);
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))throw Error('E-mail invalid.');
+    $('login-email').value=email;$('login-email').readOnly=false;$('email-cover').hidden=true;
+    $('email-pin').value='';btn.textContent='Acoperă adresa';
+    $('pin-status').textContent='Adresa este afișată. Poți introduce parola Supabase.';
+  }catch(err){$('email-pin').value='';$('pin-status').textContent='PIN incorect sau indisponibil. Încearcă din nou.';}
+  finally{btn.disabled=false;}
+});
+$('email-pin').addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();$('email-reveal').click();}});
+$('login-form').addEventListener('submit',async e=>{
+ if(!cloud.enabled){e.preventDefault();return;}
+ e.preventDefault();
+ if(!$('email-cover').hidden){$('login-status').textContent='Mai întâi introdu PIN-ul și apasă „Arată adresa”.';return;}
+ const btn=$('login-button');btn.disabled=true;
+ $('login-status').textContent='Se verifică autentificarea…';
+ try {
+   await cloud.login($('login-email').value.trim(),$('login-password').value);
+   $('login-password').value='';maskEmail();
+   setAuthenticated(true);
+   await readPublished(false); // readPublished restaurează automat draftul, fără dialoguri.
+   $('login-status').textContent='';
+ }catch(err){$('login-status').textContent=err.message;}
+ finally{btn.disabled=false;}
+});
+$('logout-button').onclick=async()=>{
+ if(unpublishedChanges&&!confirm('Există modificări nepublicate. Ele vor rămâne salvate în acest browser după deconectare. Continuați?'))return;
+ // Nu ștergem draftul la deconectare.
+ unpublishedChanges=false;
+ await cloud.logout();setAuthenticated(false);$('login-password').value='';maskEmail();
+ data=normalizeContent({books:[],events:[],news:[],resources:[],gallery:[],rubrics:[]});renderCounters();render();
+};
+initSettings();renderCounters();render();
+setAuthenticated(false);
+updateMaintenancePanel({enabled:false});
+$('draft-status').textContent='Modificările nepublicate sunt păstrate automat în acest browser.';
+if(cloud.enabled){
+ cloud.authorized().then(async authorized=>{
+   if(authorized){setAuthenticated(true);await readPublished(false);}
+ }).catch(()=>{setAuthenticated(false);});
+}else{
+ $('security-setup').hidden=false;
+ $('login-form').hidden=true;
+}
+</script>
+</body></html>
