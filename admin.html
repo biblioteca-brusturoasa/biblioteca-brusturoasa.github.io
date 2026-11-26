@@ -56,7 +56,7 @@ dialog{border:1px solid var(--line);border-radius:11px;padding:0;width:min(720px
 @media(max-width:650px){.modal-actions{flex-wrap:wrap}.modal-actions button{max-width:100%;white-space:normal}}
 </style>
 <script src="./config.js"></script>
-<script src="./cloud.js"></script>
+<script src="./cloud.js"></script><script src="./neuroform/core.js"></script><script src="./neuroform/intelligence.js"></script><script src="./neuroform/catalog-adapter.js"></script>
 </head>
 <body>
 <header class="top"><div class="top-in"><div><small>Administrarea proiectului · Dobrițoiu Sevastiana</small><strong>Biblioteca „Păstorel Teodoreanu”</strong></div><div class="actions"><button id="logout-button" class="btn" type="button" hidden>Deconectare</button><a href="./index.html" target="_blank" rel="noopener">Deschide site-ul cititorilor ↗</a></div></div></header>
@@ -92,7 +92,7 @@ dialog{border:1px solid var(--line);border-radius:11px;padding:0;width:min(720px
 <button type="button" class="navbtn" data-tab="live">🔴 Transmisiuni LIVE</button>
 <button type="button" class="navbtn" data-tab="rubrics">Alte rubrici <span class="count" id="n-rubrics"></span></button>
 <p class="label">Bibliotecă</p><button type="button" class="navbtn" data-tab="settings">Program și prezentare</button>
-<p class="label">Publicare</p><button type="button" class="navbtn" data-tab="publish">Salvare și publicare</button>
+<p class="label">NeuroForm</p><button type="button" class="navbtn" data-tab="neuroform">Asistent și dezvoltare</button><p class="label">Publicare</p><button type="button" class="navbtn" data-tab="publish">Salvare și publicare</button>
 </aside>
 <main><div class="intro"><h1>Administrarea bibliotecii</h1><p class="small"><strong>Inițiatoare și responsabilă de administrare și lansare:</strong> bibliotecar Dobrițoiu Sevastiana.</p><p>Adaugă cărți, redactează anunțuri și pregătește informațiile pentru publicare. Modificările se păstrează într-un draft până când alegi „Publică online”.</p></div>
 <section class="panel maintenance-panel" id="maintenance-panel">
@@ -109,7 +109,7 @@ Doar persoanele cu drepturi în depozit pot publica schimbările. Nu există o c
 </div>
 </section>
 <section class="cards" aria-label="Situație"><div class="stat"><b id="stat-books">0</b><span>Titluri în catalog</span></div><div class="stat"><b id="stat-news">0</b><span>Noutăți</span></div><div class="stat"><b id="stat-events">0</b><span>Evenimente</span></div><div class="stat"><b id="stat-resources">0</b><span>Resurse electronice</span></div></section>
-<section class="panel" id="records-panel"><div class="panel-heading"><div><h2 id="section-heading">Fondul de carte</h2><p class="hint" id="section-description">Introduceți titlurile din biblioteca reală.</p></div><button type="button" class="btn primary" id="add-record">+ Adaugă</button></div>
+<section class="panel" id="neuroform-panel" hidden><h2>NeuroForm · Asistent și dezvoltare</h2><p class="hint">Cercetare locală în conținutul bibliotecii. Nu introduceți date personale. Rezultatele nu sunt consultanță juridică. Publicarea folosește fluxul existent.</p><form id="nf-admin-form"><label>Întrebare sau cuvinte-cheie<input id="nf-admin-query" maxlength="300" required></label><button class="btn primary">Caută</button><button class="btn" type="button" id="nf-admin-voice">Dictează</button><button class="btn" type="button" id="nf-admin-speak">Citește</button></form><div id="nf-admin-results" aria-live="polite"></div><div class="actions"><button class="btn" type="button" id="nf-genesis">Creează rubrică</button><button class="btn" type="button" id="nf-chronos">Creează eveniment</button><button class="btn" type="button" id="nf-horizon">Surse parteneriate</button><a href="./neuroform/" target="_blank" rel="noopener noreferrer">Portal public NeuroForm</a></div><p>Dosarele private, Atlas și Phoenix se păstrează în aplicația locală separată; nu se publică pe GitHub.</p></section><section class="panel" id="records-panel"><div class="panel-heading"><div><h2 id="section-heading">Fondul de carte</h2><p class="hint" id="section-description">Introduceți titlurile din biblioteca reală.</p></div><button type="button" class="btn primary" id="add-record">+ Adaugă</button></div>
 <div class="actions"><input type="search" id="search-records" placeholder="Caută în această secțiune" aria-label="Caută înregistrări" style="max-width:420px"><span class="small" id="record-count"></span></div><div id="records"></div></section>
 <section class="panel" id="media-panel" hidden>
  <div class="panel-heading"><h2>🎬 Filmări și videoclipuri</h2><p class="hint">Din acest panou poți adăuga linkuri YouTube/Facebook sau filmări MP4/WebM de pe calculator.</p></div>
@@ -233,7 +233,7 @@ $('restore-backup').onclick=()=>{
 };
 function renderCounters(){for(const key of Object.keys(schemas)){const el=$('n-'+key);if(el)el.textContent=Array.isArray(data[key])?data[key].length:0;}for(const key of ['books','news','events','resources'])$('stat-'+key).textContent=(data[key]||[]).length.toLocaleString('ro');}
 function render(){for(const b of document.querySelectorAll('.navbtn')){b.classList.toggle('active',b.dataset.tab===active);b.setAttribute('aria-current',b.dataset.tab===active?'page':'false');}
- const records=!!schemas[active];$('records-panel').hidden=!records;$('book-extra').hidden=active!=='books';$('settings-panel').hidden=active!=='settings';$('publish-panel').hidden=active!=='publish';$('media-panel').hidden=active!=='media';$('live-panel').hidden=active!=='live';
+ $('neuroform-panel').hidden=active!=='neuroform'; const records=!!schemas[active];$('records-panel').hidden=!records;$('book-extra').hidden=active!=='books';$('settings-panel').hidden=active!=='settings';$('publish-panel').hidden=active!=='publish';$('media-panel').hidden=active!=='media';$('live-panel').hidden=active!=='live';
  if(records){$('section-heading').textContent=schemas[active].title;$('section-description').textContent=schemas[active].desc;$('search-records').value='';renderRecords();}
  if(active==='settings')populateSettings();if(active==='media')renderVideoList();if(active==='live')populateLiveForm();}
 function renderRecords(){const root=$('records');root.replaceChildren();const all=Array.isArray(data[active])?data[active]:[];const query=($('search-records').value||'').toLocaleLowerCase('ro');const shown=all.map((v,i)=>({v,i})).filter(({v})=>Object.values(v).some(val=>String(val).toLocaleLowerCase('ro').includes(query))).slice(0,150);
@@ -615,4 +615,4 @@ if(cloud.enabled){
  $('login-form').hidden=true;
 }
 </script>
-</body></html>
+<script src="./neuroform/admin-bridge.js"></script></body></html>
