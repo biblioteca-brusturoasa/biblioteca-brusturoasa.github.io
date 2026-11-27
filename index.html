@@ -852,11 +852,12 @@ function recordingCard(video) {
 
 function externalVideoCard(item) {
  const card=node('article','article media-card');
- const kind=item.kind==='youtube'?'YouTube':item.kind==='facebook'?'Facebook':'Filmare a bibliotecii';
+ const kind=item.kind==='youtube'?'YouTube':item.kind==='facebook'?'Facebook':item.kind==='external'?'Sursă externă':'Filmare a bibliotecii';
  card.append(node('p','article-kind','Filmare · '+kind),node('h3','',item.title||'Filmare'));
  if(item.description)card.append(node('p','article-description',item.description));
  let url='';try {const u=new URL(item.url);if(u.protocol==='https:')url=u.href;}catch{}
  if(!url)return card;
+ if(item.kind==='external'){card.append(link(url,'Deschide videoclipul la sursă ↗'));return card;}
  const controls=node('div','video-actions'),play=node('button','button button-main','Redă filmarea');play.type='button';
  const outbound=link(url,kind==='facebook'?'Deschide pe Facebook ↗':kind==='youtube'?'Deschide pe YouTube ↗':'Deschide filmarea ↗');
  controls.append(play,outbound);
@@ -893,7 +894,7 @@ function photoCard(photo) {
   image.loading = 'lazy';
   image.decoding = 'async';
   image.alt = photo.description;
-  const full = link(source, '', 'photo-link');
+  const full = link(safeLink(photo.url) || source, '', 'photo-link');
   full.setAttribute('aria-label', 'Deschide fotografia «' + photo.title + '»');
   full.append(image);
   card.append(full, node('h3', '', photo.title), node('p', '', photo.description));
@@ -906,10 +907,10 @@ function renderMedia(video, live, gallery) {
   grid.replaceChildren();
   const isVideo = item => /^[a-f0-9]{32}\.(mp4|webm)$/.test(item?.name || '');
   const isPhoto = item => /^[a-f0-9]{32}\.(png|jpg|webp)$/.test(item?.name || '') || Boolean(safeLink(item?.url));
-  if (live?.enabled !== false && (/^[A-Za-z0-9_-]{11}$/.test(live?.youtube || '') || live?.channel)) grid.append(liveCard(live));
+  if(live?.enabled!==false && safeLink(live?.external_url)){const card=node('article','article media-card');card.append(node('p','article-kind','Transmisiune LIVE'),node('h3','',live.title||'Transmisiune LIVE'),node('p','',live.description||''),link(safeLink(live.external_url),'Deschide transmisiunea la sursă ↗'));grid.append(card);}else if (live?.enabled !== false && (/^[A-Za-z0-9_-]{11}$/.test(live?.youtube || '') || live?.channel)) grid.append(liveCard(live));
   if (isVideo(video)) grid.append(recordingCard(video));
   const videoItems=Array.isArray(video?.items)?video.items:[];
-  for(const item of videoItems)if(item&&['youtube','facebook','file'].includes(item.kind))grid.append(externalVideoCard(item));
+  for(const item of videoItems)if(item&&['youtube','facebook','file','external'].includes(item.kind))grid.append(externalVideoCard(item));
   const items = list(gallery).filter(item => isVideo(item) || isPhoto(item));
   if (!grid.children.length && !items.length) empty(grid, 'Momentan nu sunt fotografii, filmări sau transmisiuni publicate.');
   if (items.length) {
