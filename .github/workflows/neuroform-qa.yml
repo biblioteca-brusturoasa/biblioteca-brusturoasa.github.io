@@ -1,0 +1,56 @@
+name: NeuroForm Quality Assurance
+
+on:
+  push:
+    branches:
+      - neuroform-integrare
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Verificare JavaScript
+        run: |
+          set -e
+          find neuroform -name '*.js' -type f -print0 | xargs -0 -r -n 1 node --check
+          node --check cloud.js
+          node --check config.js
+
+      - name: Verificare module
+        run: |
+          set -e
+          for f in index.html admin.html neuroform/index.html neuroform/core.js neuroform/advanced.js neuroform/intelligence.js neuroform/public.js neuroform/admin-bridge.js neuroform/catalog-adapter.js neuroform/style.css; do
+            test -s "$f"
+            echo "Conform: $f"
+          done
+
+      - name: Verificare JSON
+        run: |
+          python -m json.tool biblioteca-data.json > /dev/null
+          python -m json.tool site-status.json > /dev/null
+
+      - name: Protectia fisierelor private
+        run: |
+          if git ls-files | grep -Ei '(\.sqlite3?$|\.db$|\.env($|\.)|recovery-privat/|PRIVAT-DOAR-LOCAL)'; then
+            exit 1
+          fi
+
+      - name: Integritate SHA256
+        run: find neuroform -type f -exec sha256sum {} \;
+
+      - name: Raport tehnic
+        run: |
+          echo "## NeuroForm Technical Validation" >> "$GITHUB_STEP_SUMMARY"
+          echo "Commit: $GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
+          echo "Verificari executate: CONFORM" >> "$GITHUB_STEP_SUMMARY"
