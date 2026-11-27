@@ -88,7 +88,7 @@ dialog{border:1px solid var(--line);border-radius:11px;padding:0;width:min(720px
 <button type="button" class="navbtn" data-tab="events">Evenimente <span class="count" id="n-events"></span></button>
 <button type="button" class="navbtn" data-tab="resources">Biblioteca electronică <span class="count" id="n-resources"></span></button>
 <button type="button" class="navbtn" data-tab="gallery">Galerie foto <span class="count" id="n-gallery"></span></button>
-<button type="button" class="navbtn" data-tab="media">🎬 Filmări și videoclipuri</button>
+<button type="button" class="navbtn" id="share-institutions">✉ Trimite către instituții</button><button type="button" class="navbtn" data-tab="media">🎬 Filmări și videoclipuri</button>
 <button type="button" class="navbtn" data-tab="live">🔴 Transmisiuni LIVE</button>
 <button type="button" class="navbtn" data-tab="rubrics">Alte rubrici <span class="count" id="n-rubrics"></span></button>
 <p class="label">Bibliotecă</p><button type="button" class="navbtn" data-tab="settings">Program și prezentare</button>
@@ -119,16 +119,16 @@ Doar persoanele cu drepturi în depozit pot publica schimbările. Nu există o c
    <label><span>De unde adaugi videoclipul?</span>
      <select id="video-kind"><option value="file">Filmarea mea din calculator (MP4/WebM)</option><option value="youtube">Link YouTube</option><option value="facebook">Link Facebook</option><option value="external">Alt videoclip public (HTTPS)</option></select>
    </label>
-   <label id="video-link-wrap"><span>Link către videoclip</span><input type="url" id="video-url" placeholder="https://www.youtube.com/watch?v=..."></label>
-   <label id="video-file-wrap" hidden><span>Alege filmarea de pe calculator (maxim 25 MB)</span>
+   <label id="video-link-wrap" hidden><span>Link către videoclip</span><input type="url" id="video-url" placeholder="https://www.youtube.com/watch?v=..."></label>
+   <label id="video-file-wrap"><span>Alege filmarea de pe calculator (maxim 25 MB)</span>
      <input id="video-file" type="file" accept="video/mp4,video/webm,.mp4,.webm" />
    </label>
    <div class="actions"><span class="small">Completează automat o probă:</span><button type="button" class="btn" id="video-demo-youtube">Probă YouTube</button><button type="button" class="btn" id="video-demo-facebook">Probă Facebook</button></div>
    <p class="hint">Publică numai filmări pentru care ai dreptul de utilizare și acordul necesar al persoanelor filmate. Nu descărca și reîncărca filmele altor persoane: utilizează linkul original.</p>
    <div class="actions"><button class="btn primary" id="video-add" type="submit">+ Adaugă filmarea</button><span id="video-feedback" class="small" role="status"></span></div>
  </form>
- <hr><h3>Filmări pregătite pentru publicare</h3><div id="video-list"></div>
- <p class="notice">După adăugare, intră la <strong>Salvare și publicare</strong> și apasă <strong>Publică online acum</strong>. Atunci filmările vor apărea pe site-ul cititorilor la „Galerie și live”.</p>
+ <hr><h3>Filmări salvate (draft și publicate)</h3><div id="video-list"></div>
+ <p class="notice">După adăugare, intră la <strong>Salvare și publicare</strong> și apasă <strong>Publică online acum</strong>. Atunci filmările vor apărea în rubrica separată „Filmări și videoclipuri”, fără a modifica fotografiile sau LIVE.</p>
 </section>
 <section class="panel" id="live-panel" hidden>
  <div class="panel-heading"><h2>🔴 Transmisiuni LIVE</h2></div>
@@ -159,7 +159,7 @@ Doar persoanele cu drepturi în depozit pot publica schimbările. Nu există o c
 <section class="panel" id="book-extra"><h3>Recomandare pentru catalog</h3><p class="small">Poți importa multe titluri simultan dintr-un CSV, folosind secțiunea „Salvare și publicare”. Pentru exemplare, notează câte cărți există, dar disponibilitatea împrumutului trebuie verificată în continuare la bibliotecă.</p><button class="btn" type="button" id="go-import">Mergi la import CSV</button></section>
 <div class="status" id="draft-status" role="status"></div>
 </main></div>
-<dialog id="edit-dialog" aria-labelledby="dialog-title"><form id="edit-form" class="modal"><div class="dialog-header"><h2 id="dialog-title">Adaugă</h2><button class="btn" type="button" id="close-dialog" aria-label="Închide">×</button></div><div id="dynamic-fields" class="fieldgrid"></div><div id="gallery-tools" hidden><label><span>Sursa fotografiei</span><select id="gallery-source"><option value="file">Din calculator (JPG, PNG, WebP)</option><option value="url">Imagine de pe internet (HTTPS)</option></select></label><label id="gallery-file-wrap"><span>Alege fotografia din calculator (maxim 6 MB)</span><input id="gallery-file" type="file" accept="image/jpeg,image/png,image/webp"></label><img id="gallery-preview" class="poster-preview" alt="Previzualizare fotografie" hidden><p id="gallery-feedback" role="status"></p><p class="hint">Publică doar materiale autorizate. Fișierele încărcate în spațiul public pot fi accesibile înainte de publicarea în galerie.</p></div><div class="poster-tools" id="poster-tools" hidden>
+<dialog id="edit-dialog" aria-labelledby="dialog-title"><form id="edit-form" class="modal"><div class="dialog-header"><h2 id="dialog-title">Adaugă</h2><button class="btn" type="button" id="close-dialog" aria-label="Închide">×</button></div><div id="dynamic-fields" class="fieldgrid"></div><div id="gallery-tools" hidden><label><span>Sursa fotografiei</span><select id="gallery-source"><option value="file">Din calculator (JPG, PNG, WebP)</option><option value="url">Imagine de pe internet (HTTPS)</option></select></label><label id="gallery-file-wrap"><span>Alege fotografia din calculator (maxim 6 MB)</span><input id="gallery-file" type="file" multiple accept="image/jpeg,image/png,image/webp"></label><img id="gallery-preview" class="poster-preview" alt="Previzualizare fotografie" hidden><p id="gallery-feedback" role="status"></p><p class="hint">Publică doar materiale autorizate. Fișierele încărcate în spațiul public pot fi accesibile înainte de publicarea în galerie.</p></div><div class="poster-tools" id="poster-tools" hidden>
  <label><span>Încarcă un afiș al evenimentului (JPG, PNG sau WebP, până la 6 MB)</span><input id="poster-input" type="file" accept="image/jpeg,image/png,image/webp"></label>
  <img id="poster-preview" class="poster-preview" alt="Previzualizarea afișului" hidden>
  <label><span>Descrierea afișului pentru accesibilitate</span><input id="poster-alt" type="text" maxlength="180" placeholder="De exemplu: afișul atelierului de lectură"></label>
@@ -167,6 +167,7 @@ Doar persoanele cu drepturi în depozit pot publica schimbările. Nu există o c
  <p class="hint">Afișele sunt comprimate automat. Publică numai imagini pentru care biblioteca are drepturi și permisiunea persoanelor fotografiate, dacă este cazul.</p>
  </div><div class="modal-actions"><button type="button" class="btn" id="cancel-dialog">Anulează</button><button type="submit" class="btn">Salvează fără publicare</button><button type="submit" class="btn primary" id="save-and-publish" data-publish="yes">Salvează și publică online</button></div></form></dialog>
 <div id="message" hidden role="status"></div>
+<dialog id="institution-dialog"><form class="modal" id="institution-form"><h2>Trimite materiale către alte instituții</h2><p>Distribuie linkuri către materiale deja publicate. Verifică permisiunea de distribuire a imaginilor.</p><label>Adresa de e-mail a instituției<input id="institution-email" type="email" required></label><label>Subiect<input id="institution-subject" required value="Activități – Biblioteca Brusturoasa"></label><label>Materiale publicate<textarea id="institution-body" rows="8" required></textarea></label><div class="actions"><button class="btn primary" type="submit">Deschide e-mailul pentru trimitere</button><button class="btn" type="button" id="institution-close">Închide</button></div><p class="hint">Se deschide aplicația de e-mail. Verifică mesajul și trimite-l manual; nu se atașează fișiere.</p></form></dialog>
 <script type="application/json" id="initial-data">{"_status": "preview", "books": [], "news": [], "events": [], "resources": [], "recommendation": {}, "program": {}, "public_info": {}, "video": {}, "live": {}, "logo": "", "rubrics": [], "gallery": []}</script>
 <script>
 'use strict';
@@ -180,7 +181,7 @@ const schemas = {
  news:{title:'Noutăți',desc:'Anunțuri și informații pentru cititori.',fields:[['title','Titlul anunțului','text',1],['date','Data publicării','date'],['body','Textul anunțului','textarea',1],['source','Link pentru detalii (https://)','url']]},
  events:{title:'Evenimente',desc:'Ateliere, întâlniri, expoziții și alte activități.',fields:[['title','Titlul evenimentului','text',1],['date','Data începerii','date',1],['end_date','Data încheierii','date'],['time','Ora','text'],['place','Locul','text'],['institution','Organizator','text'],['category','Categorie','text'],['body','Descriere','textarea'],['source','Link către anunț (https://)','url'],['featured','Apare în agenda culturală','checkbox']]},
  resources:{title:'Biblioteca electronică',desc:'Resurse digitale și legături autorizate.',fields:[['title','Titlu','text',1],['author','Autor','text'],['date','Data','date'],['body','Descriere','textarea'],['source','Sursa originală (https://)','url'],['romanian_source','Versiune în limba română (https://)','url']]},
- gallery:{title:'Galerie foto',desc:'Alege o fotografie din calculator sau introdu adresa HTTPS a unei imagini publice.',fields:[['title','Titlul fotografiei','text',1],['description','Descriere / text alternativ','textarea'],['url','URL public imagine (https://)','url']]},
+ gallery:{title:'Galerie foto',desc:'Alege una sau mai multe fotografii din calculator pentru același eveniment sau introdu adresa HTTPS a unei imagini publice.',fields:[['title','Titlul fotografiei','text',1],['description','Descriere / text alternativ','textarea'],['url','URL public imagine (https://)','url']]},
  rubrics:{title:'Alte rubrici',desc:'Întrebări frecvente și informații utile.',fields:[['title','Titlu','text',1],['body','Conținut','textarea',1],['source','Link opțional (https://)','url'],['link_label','Textul legăturii','text']]}
 };
 const days={luni:'Luni',marti:'Marți',miercuri:'Miercuri',joi:'Joi',vineri:'Vineri',sambata:'Sâmbătă',duminica:'Duminică'};
@@ -232,7 +233,7 @@ $('restore-backup').onclick=()=>{
  }catch(err){$('recovery-result').textContent='Copia nu poate fi recuperată: '+err.message;}
 };
 function renderCounters(){for(const key of Object.keys(schemas)){const el=$('n-'+key);if(el)el.textContent=Array.isArray(data[key])?data[key].length:0;}for(const key of ['books','news','events','resources'])$('stat-'+key).textContent=(data[key]||[]).length.toLocaleString('ro');}
-function render(){for(const b of document.querySelectorAll('.navbtn')){b.classList.toggle('active',b.dataset.tab===active);b.setAttribute('aria-current',b.dataset.tab===active?'page':'false');}
+function render(){for(const b of document.querySelectorAll('.navbtn[data-tab]')){b.classList.toggle('active',b.dataset.tab===active);b.setAttribute('aria-current',b.dataset.tab===active?'page':'false');}
  $('neuroform-panel').hidden=active!=='neuroform'; const records=!!schemas[active];$('records-panel').hidden=!records;$('book-extra').hidden=active!=='books';$('settings-panel').hidden=active!=='settings';$('publish-panel').hidden=active!=='publish';$('media-panel').hidden=active!=='media';$('live-panel').hidden=active!=='live';
  if(records){$('section-heading').textContent=schemas[active].title;$('section-description').textContent=schemas[active].desc;$('search-records').value='';renderRecords();}
  if(active==='settings')populateSettings();if(active==='media')renderVideoList();if(active==='live')populateLiveForm();}
@@ -242,16 +243,19 @@ function renderRecords(){const root=$('records');root.replaceChildren();const al
  const frag=document.createDocumentFragment();for(const {v,i} of shown){const r=h('div','record'),description=h('div','record-info');description.append(h('div','record-title',v.title||'Fără titlu'));const details=[v.author||v.date||'',v.genre||v.place||'',v.isbn?'ISBN '+v.isbn:'',v.poster?'🖼 Afiș atașat':''].filter(Boolean).join(' · ');if(details)description.append(h('div','record-details',details));const buttons=h('div','actions record-actions');const edit=h('button','btn','Modifică');edit.type='button';edit.addEventListener('click',()=>openRecord(i));const del=h('button','btn danger','Șterge');del.type='button';del.addEventListener('click',()=>deleteRecord(i));buttons.append(edit,del);r.append(description,buttons);frag.append(r);}root.append(frag);}
 function formField([name,label,type,required],value){const wrap=h('label',type==='textarea'?'wide':'');if(type==='checkbox'){wrap.className='check wide';const input=h('input');input.type='checkbox';input.name=name;input.checked=value===true;const text=h('span','',label);wrap.append(input,text);return wrap;}wrap.append(h('span','',label));const input=h(type==='textarea'?'textarea':'input');if(type!=='textarea')input.type=type;input.name=name;input.value=value??'';input.required=!!required;if(type==='url')input.placeholder='https://';if(type==='number')input.min='0';wrap.append(input);return wrap;}
 function openRecord(index){editing=index;const obj=index>=0?data[active][index]:{};$('dialog-title').textContent=(index>=0?'Modifică':'Adaugă')+' · '+schemas[active].title;const root=$('dynamic-fields');root.replaceChildren(...schemas[active].fields.map(f=>formField(f,obj[f[0]])));
- $('gallery-tools').hidden=active!=='gallery'; $('gallery-file').value=''; $('gallery-preview').hidden=true; $('gallery-preview').removeAttribute('src'); $('gallery-feedback').textContent=''; if(active==='gallery'){ $('gallery-source').value=obj.url?'url':'file'; updateGalleryFields(); }
+ $('gallery-tools').hidden=active!=='gallery'; $('gallery-file').value=''; $('gallery-preview').hidden=true; $('gallery-preview').removeAttribute('src'); $('gallery-feedback').textContent=''; if(active==='gallery'){ $('gallery-file').multiple=index<0; $('gallery-source').value=obj.url?'url':'file'; updateGalleryFields(); }
  $('poster-tools').hidden=active!=='events';$('poster-input').value='';$('poster-remove').checked=false;$('poster-alt').value=obj.poster_alt||'';
  const image=$('poster-preview');image.hidden=!obj.poster;image.src=obj.poster||'';
  $('edit-dialog').showModal();}
 function updateGalleryFields(){const file=$('gallery-source').value==='file';const input=$('edit-form').elements.namedItem('url');if(input){input.closest('label').hidden=file;input.disabled=file;} $('gallery-file-wrap').hidden=!file; $('gallery-file').disabled=!file;}
+$('share-institutions').onclick=()=>{const base=new URL('index.html',location.href);base.hash='video'; $('institution-body').value='Bună ziua,\n\nVă transmitem galeria foto, filmările și transmisiunile publicate ale bibliotecii:\n'+base.href+'\n\nCu stimă,\nBiblioteca Brusturoasa';$('institution-dialog').showModal();};
+$('institution-close').onclick=()=>$('institution-dialog').close();
+$('institution-form').onsubmit=e=>{e.preventDefault();location.href='mailto:'+encodeURIComponent($('institution-email').value.trim()).replace(/%40/g,'@')+'?subject='+encodeURIComponent($('institution-subject').value)+'&body='+encodeURIComponent($('institution-body').value);};
 $('gallery-source').onchange=updateGalleryFields;
-$('gallery-file').onchange=async()=>{const file=$('gallery-file').files[0];$('gallery-preview').hidden=true; if(!file)return; try{const result=await convertPoster(file); if($('gallery-file').files[0]!==file)return; $('gallery-preview').src=result;$('gallery-preview').hidden=false;$('gallery-feedback').textContent='Fotografie pregătită.';}catch(e){$('gallery-feedback').textContent=e.message;}};
+$('gallery-file').onchange=async()=>{const file=$('gallery-file').files[0];$('gallery-preview').hidden=true; if(!file)return; try{const result=await convertPoster(file); if($('gallery-file').files[0]!==file)return; $('gallery-preview').src=result;$('gallery-preview').hidden=false;$('gallery-feedback').textContent=$('gallery-file').files.length+' fotografii selectate. Prima este afișată în previzualizare.';}catch(e){$('gallery-feedback').textContent=e.message;}};
 function deleteRecord(index){const item=data[active][index];if(!confirm('Ștergi „'+(item?.title||'această înregistrare')+'” din draft?'))return;data[active].splice(index,1);markSaved();renderRecords();}
 function checkUrl(str){if(!str)return true;try{const url=new URL(str);return url.protocol==='https:'&&!url.username&&!url.password;}catch{return false;}}
-$('edit-form').addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;const obj=editing>=0?{...data[active][editing]}:{};for(const [name,label,type] of schemas[active].fields){const input=form.elements.namedItem(name);obj[name]=type==='checkbox'?input.checked:String(input.value||'').trim();if(type==='url'&&!input.disabled&&!checkUrl(obj[name])){notify('Link invalid: '+label+'. Sunt acceptate doar adrese https://');input.focus();return;}}
+$('edit-form').addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;const obj=editing>=0?{...data[active][editing]}:{};const extraPhotos=[];for(const [name,label,type] of schemas[active].fields){const input=form.elements.namedItem(name);obj[name]=type==='checkbox'?input.checked:String(input.value||'').trim();if(type==='url'&&!input.disabled&&!checkUrl(obj[name])){notify('Link invalid: '+label+'. Sunt acceptate doar adrese https://');input.focus();return;}}
  if(active==='events'){
    if($('poster-remove').checked){delete obj.poster;delete obj.poster_alt;}
    else if($('poster-input').files[0]){
@@ -265,16 +269,16 @@ $('edit-form').addEventListener('submit',async e=>{e.preventDefault();const form
  if(active==='gallery'&&$('gallery-source').value==='file'){
    const file=$('gallery-file').files[0];
    if(file){if(!isEditorAuthenticated||!cloud.hasSession)return notify('Autentificare autorizată obligatorie.'); const buttons=[...form.querySelectorAll('button')];buttons.forEach(b=>b.disabled=true);$('gallery-feedback').textContent='Se încarcă fotografia…';
-   try{obj.url=await cloud.uploadPoster(await convertPoster(file));delete obj.name;}catch(err){$('gallery-feedback').textContent='Încărcarea a eșuat: '+err.message;return;}finally{buttons.forEach(b=>b.disabled=false);}}
+   try{const files=[...$('gallery-file').files]; const urls=[]; for(let i=0;i<files.length;i++){ $('gallery-feedback').textContent='Se încarcă '+(i+1)+' / '+files.length; urls.push(await cloud.uploadPoster(await convertPoster(files[i]))); } obj.url=urls[0];delete obj.name; for(let i=1;i<urls.length;i++)extraPhotos.push({...obj,url:urls[i],title:obj.title+' ('+(i+1)+')'});}catch(err){$('gallery-feedback').textContent='Încărcarea a eșuat: '+err.message;return;}finally{buttons.forEach(b=>b.disabled=false);}}
    else if(!obj.url&&!obj.name)return notify('Alege fotografia din calculator.');
  }
  if(active==='gallery'&&!obj.url&&!obj.name){notify('Pentru o fotografie nouă este necesar un URL https:// către imagine.');return;}
  if(['events','resources','rubrics'].includes(active)&&!obj.id)obj.id='item-'+Math.random().toString(36).slice(2,10);
  if(active==='gallery'&&!obj.kind)obj.kind='photo';
- if(editing<0)data[active].unshift(obj);else data[active][editing]=obj;
+ if(editing<0)data[active].unshift(obj,...extraPhotos);else data[active][editing]=obj;
  const shouldPublish=e.submitter?.dataset.publish==='yes';if(!markSaved())return;$('edit-dialog').close();renderRecords();if(shouldPublish){active='publish';render();$('publish-online').click();}else notify('Înregistrarea a fost salvată. O puteți publica mai târziu.');});
 $('close-dialog').onclick=$('cancel-dialog').onclick=()=>$('edit-dialog').close();$('add-record').onclick=()=>openRecord(-1);$('search-records').addEventListener('input',renderRecords);
-for(const b of document.querySelectorAll('.navbtn'))b.addEventListener('click',()=>{active=b.dataset.tab;render();window.scrollTo({top:0,behavior:'smooth'});});$('go-import').onclick=()=>{active='publish';render();};
+for(const b of document.querySelectorAll('.navbtn[data-tab]'))b.addEventListener('click',()=>{active=b.dataset.tab;render();window.scrollTo({top:0,behavior:'smooth'});});$('go-import').onclick=()=>{active='publish';render();};
 function initSettings(){for(const [key,label] of Object.entries(days))$('program-fields').append(formField([key,label,'text'],' '));for(const [key,label]of Object.entries(info))$('info-fields').append(formField([key,label,'textarea'],' '));}
 function populateSettings(){const p=data.program||{},i=data.public_info||{};$('program-confirmed').checked=!!p.confirmed;for(const key of Object.keys(days))$('program-fields').querySelector('[name="'+key+'"]').value=p.days?.[key]||'';$('program-notes').value=p.notes||'';$('info-confirmed').checked=!!i.confirmed;for(const key of Object.keys(info))$('info-fields').querySelector('[name="'+key+'"]').value=i[key]||'';$('recommendation-title').value=data.recommendation?.title||'';$('recommendation-author').value=data.recommendation?.author||'';$('recommendation-summary').value=data.recommendation?.summary||'';}
 $('save-settings').onclick=()=>{const daysData={};for(const key of Object.keys(days))daysData[key]=$('program-fields').querySelector('[name="'+key+'"]').value.trim();data.program={...data.program,confirmed:$('program-confirmed').checked,days:daysData,notes:$('program-notes').value.trim()};const infoData={...data.public_info,confirmed:$('info-confirmed').checked};for(const key of Object.keys(info))infoData[key]=$('info-fields').querySelector('[name="'+key+'"]').value.trim();data.public_info=infoData;data.recommendation={title:$('recommendation-title').value.trim(),author:$('recommendation-author').value.trim(),summary:$('recommendation-summary').value.trim()};markSaved();notify('Programul și prezentarea au fost salvate în draft.');};
@@ -495,7 +499,7 @@ function normalizeFacebook(url) {
 function updateVideoFields() {
  const kind=$('video-kind').value;
  $('video-link-wrap').hidden=kind==='file'; $('video-file-wrap').hidden=kind!=='file';
- $('video-url').required=kind!=='file'; $('video-file').required=kind==='file';
+ $('video-url').required=kind!=='file'; $('video-url').disabled=kind==='file'; $('video-file').required=kind==='file'; $('video-file').disabled=kind!=='file';
  $('video-url').placeholder=kind==='facebook'?'https://www.facebook.com/reel/...':kind==='external'?'https://...':'https://www.youtube.com/watch?v=...';
 }
 $('video-kind').addEventListener('change',updateVideoFields);updateVideoFields();
@@ -519,7 +523,7 @@ function renderVideoList() {
  });
 }
 $('video-form').addEventListener('submit',async e=>{
- e.preventDefault();if(!cloud.enabled||!cloud.hasSession)return notify('Autentifică-te în Supabase pentru a adăuga filmări.');
+ e.preventDefault();if(!isEditorAuthenticated||!cloud?.hasSession){$('video-feedback').textContent='Autentifică-te cu contul autorizat înainte de adăugare.';return notify($('video-feedback').textContent);}
  const title=$('video-title').value.trim(),description=$('video-description').value.trim(),kind=$('video-kind').value;
  if(!title)return notify('Completează titlul.');
  const button=$('video-add');button.disabled=true;
@@ -552,10 +556,10 @@ function populateLiveForm() {
  $('live-title').value=v.title||'';
  $('live-description').value=v.description||'';
  $('live-url').value=v.external_url||(/^[A-Za-z0-9_-]{11}$/.test(v.youtube||'')?'https://www.youtube.com/watch?v='+v.youtube:'');
- $('live-enabled').checked=v.enabled!==false && !!(v.youtube||v.external_url);
+ $('live-enabled').checked=v.enabled!==false && !!(v.youtube||v.external_url||v.channel);
 }
 $('live-form').addEventListener('submit',e=>{
- e.preventDefault();if(!cloud.enabled||!cloud.hasSession)return notify('Autentifică-te înainte de salvare.');
+ e.preventDefault();if(!isEditorAuthenticated||!cloud?.hasSession)return notify('Autentifică-te înainte de salvare.');
  const raw=$('live-url').value.trim(),id=raw?parseYouTubeId(raw):'';
  if(raw&&!checkUrl(raw)){$('live-feedback').textContent='Link HTTPS invalid.';return;}
  if($('live-enabled').checked&&!raw){$('live-feedback').textContent='Pentru a afișa LIVE trebuie să introduci linkul.';return;}
