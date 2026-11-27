@@ -2,6 +2,19 @@
 <html lang="ro">
 <head>
 <meta charset="utf-8">
+<script>
+// Curăță parametrii de urmărire din adresă, fără a pierde secțiunea deschisă.
+(function () {
+  try {
+    const url = new URL(window.location.href);
+    let changed = false;
+    for (const key of Array.from(url.searchParams.keys())) {
+      if (/^utm_/i.test(key)) { url.searchParams.delete(key); changed = true; }
+    }
+    if (changed) window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
+  } catch (_) { /* Site-ul rămâne utilizabil. */ }
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f7f5ee">
 <meta name="description" content="Catalog, program, resurse și evenimente la Biblioteca Comunală „Păstorel Teodoreanu” din Brusturoasa.">
